@@ -97,9 +97,9 @@
             gap: 8px;
         }
 
-        .grid {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: 1fr;
             gap: 30px;
             margin-bottom: 50px;
         }
@@ -333,8 +333,8 @@
 
         /* CCR List Styles */
         .ccrs-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 15px;
         }
 
@@ -350,10 +350,12 @@
             transform: translateY(0);
             animation: fadeInUp 0.5s ease forwards;
             position: relative;
+            height: 100%;
         }
 
         .ccr-item:hover {
             background: rgba(126, 87, 194, 0.15);
+            transform: translateY(-5px);
         }
 
         @keyframes fadeInUp {
@@ -411,12 +413,14 @@
             background: rgba(41, 182, 246, 0.1);
             padding: 3px 10px;
             border-radius: 20px;
+            white-space: nowrap;
         }
 
         .ccr-body {
             color: var(--text-secondary);
             margin-bottom: 15px;
             line-height: 1.6;
+            flex-grow: 1;
         }
 
         .ccr-footer {
@@ -434,11 +438,8 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: var(--border-radius);
             border: 1px dashed rgba(255, 255, 255, 0.1);
-            display: none;
-        }
-
-        .background-card {
             grid-column: 1 / -1;
+            display: none;
         }
 
         .background-text {
@@ -497,9 +498,42 @@
             100% { transform: rotate(360deg); }
         }
 
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(126, 87, 194, 0.15);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-light);
+            text-shadow: 0 0 15px rgba(126, 87, 194, 0.5);
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
+            .dashboard-grid {
+                gap: 20px;
             }
             
             header {
@@ -533,6 +567,10 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            
+            .ccrs-list {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -558,6 +596,10 @@
             <div class="copyright">
                 Common Config Dashboard • Last updated: <span id="currentDate"></span>
             </div>
+            <div class="data-source">
+                <i class="fas fa-file-code"></i>
+                <span>Configuration: <a href="config.yaml" target="_blank">config.yaml</a></span>
+            </div>
         </div>
     </div>
 
@@ -566,7 +608,7 @@
         document.getElementById('currentDate').textContent = new Date().toISOString().split('T')[0];
         
         // Configuration YAML URL
-        const CONFIG_URL = './config.yaml';
+        const CONFIG_URL = 'config.yaml';
         
         // Function to calculate week numbers
         function getWeekNumber(date) {
@@ -647,6 +689,34 @@
                 `;
             });
             
+            // Create stats
+            const currentDate = new Date();
+            const activeProjects = projects.filter(p => 
+                new Date(p.start_date) <= currentDate && 
+                new Date(p.end_date) >= currentDate
+            ).length;
+            
+            const upcomingFreezes = projects.filter(p => 
+                new Date(p.freeze_date) > currentDate
+            ).length;
+            
+            const statsHTML = `
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">${projects.length}</div>
+                    <div class="stat-label">Total Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${activeProjects}</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${upcomingFreezes}</div>
+                    <div class="stat-label">Upcoming Freezes</div>
+                </div>
+            </div>
+            `;
+            
             return `
             <div class="card">
                 <div class="card-header">
@@ -663,12 +733,32 @@
                         ${projectRows}
                     </div>
                 </div>
+                ${statsHTML}
             </div>
             `;
         }
         
         // Create HTML elements for CCRs
         function createCCRsContent(ccrs, projectFilters) {
+            if (!ccrs || ccrs.length === 0) {
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
+                    </div>
+                    <div class="no-ccrs-message" style="display: block;">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No configuration change requests</h3>
+                        <p>All requests are completed or none are configured</p>
+                    </div>
+                </div>
+                `;
+            }
+            
+            const openCCRs = ccrs.filter(c => c.state === 'open').length;
+            const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
+            const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
+            
             return `
             <div class="card">
                 <div class="card-header">
@@ -693,18 +783,18 @@
                             All States
                         </button>
                         <button class="filter-btn" data-filter="open" data-type="state">
-                            Open
+                            Open (${openCCRs})
                         </button>
                         <button class="filter-btn" data-filter="in_progress" data-type="state">
-                            In Progress
+                            In Progress (${inProgressCCRs})
                         </button>
                         <button class="filter-btn" data-filter="integrated" data-type="state">
-                            Fulfilled
+                            Fulfilled (${integratedCCRs})
                         </button>
                     </div>
                 </div>
                 <div class="ccrs-list" id="ccrsContainer">
-                    ${ccrs && ccrs.length > 0 ? ccrs.map(ccr => `
+                    ${ccrs.map(ccr => `
                     <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}">
                         <div class="ccr-state-badge ccr-state-${ccr.state}">
                             ${ccr.state.replace('_', ' ').toUpperCase()}
@@ -718,13 +808,12 @@
                             <div>Created: ${ccr.created || 'N/A'}</div>
                         </div>
                     </div>
-                    `).join('') : `
-                    <div class="no-ccrs-message" id="noCCRsMessage">
+                    `).join('')}
+                    <div class="no-ccrs-message" id="noCCRsMessage" style="display: none;">
                         <i class="fas fa-inbox"></i>
                         <h3>No configuration change requests</h3>
                         <p>All requests are completed or none are configured</p>
                     </div>
-                    `}
                 </div>
             </div>
             `;
@@ -733,7 +822,7 @@
         // Create HTML elements for background
         function createBackgroundContent(text) {
             return `
-            <div class="card background-card">
+            <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-scroll"></i> Background</h2>
                 </div>
@@ -783,14 +872,14 @@
             try {
                 // Load YAML configuration
                 const response = await fetch(CONFIG_URL);
-                if (!response.ok) throw new Error('Failed to load config');
+                if (!response.ok) throw new Error('Failed to load config.yaml');
                 
                 const yamlText = await response.text();
                 const config = jsyaml.load(yamlText);
                 
                 // Create dashboard content
                 const dashboardContent = `
-                <div class="grid">
+                <div class="dashboard-grid">
                     ${createGanttChart(config.projects)}
                     ${createCCRsContent(config.change_requests, config.project_filters)}
                     ${createBackgroundContent(config.background_text)}
