@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Config Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0c0c14;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #25253d;
+            --primary: #7e57c2;
+            --primary-light: #9c7de8;
+            --secondary: #29b6f6;
+            --accent: #ff7043;
+            --success: #66bb6a;
+            --warning: #ffca28;
+            --error: #ef5350;
+            --text: #e0e0e0;
+            --text-secondary: #a0a0c0;
+            --border-radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-dark), #0f0c29);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-attachment: fixed;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-text h1 {
+            font-size: 32px;
+            background: linear-gradient(to right, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(126, 87, 194, 0.3);
+        }
+
+        .logo-text p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(126, 87, 194, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-light);
+            position: relative;
+            padding-left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .card-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 30px;
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        /* Gantt Chart Styles */
+        .gantt-container {
+            overflow-x: auto;
+            padding: 15px 0;
+        }
+
+        .gantt-header {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 10px 0;
+        }
+
+        .gantt-header-project {
+            min-width: 200px;
+            padding: 0 15px;
+            font-weight: 600;
+        }
+
+        .gantt-header-timeline {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        .gantt-week {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .gantt-week::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .gantt-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gantt-row-project {
+            min-width: 200px;
+            padding: 0 15px;
+            font-weight: 500;
+        }
+
+        .gantt-row-timeline {
+            flex: 1;
+            height: 30px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+
+        .gantt-bar {
+            position: absolute;
+            height: 20px;
+            top: 5px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .gantt-bar:hover {
+            height: 24px;
+            top: 3px;
+            box-shadow: 0 0 10px rgba(126, 87, 194, 0.5);
+        }
+
+        .gantt-milestone {
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 40px;
+            background: var(--accent);
+            z-index: 2;
+            border-radius: 2px;
+        }
+
+        .gantt-milestone::after {
+            content: 'Freeze';
+            position: absolute;
+            top: -25px;
+            left: -15px;
+            font-size: 11px;
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* CCR Filter Styles */
+        .ccrs-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-section-title {
+            color: var(--text-secondary);
+            margin-right: 5px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
+        }
+
+        /* CCR List Styles */
+        .ccrs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ccr-item {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.5s ease forwards;
+            position: relative;
+        }
+
+        .ccr-item:hover {
+            background: rgba(126, 87, 194, 0.15);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ccr-state-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .ccr-state-open {
+            background: rgba(255, 202, 40, 0.2);
+            color: var(--warning);
+        }
+
+        .ccr-state-in_progress {
+            background: rgba(41, 182, 246, 0.2);
+            color: var(--secondary);
+        }
+
+        .ccr-state-integrated {
+            background: rgba(102, 187, 106, 0.2);
+            color: var(--success);
+        }
+
+        .ccr-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-right: 100px;
+        }
+
+        .ccr-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .ccr-project {
+            font-size: 14px;
+            color: var(--secondary);
+            background: rgba(41, 182, 246, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .ccr-body {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .ccr-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .no-ccrs-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--border-radius);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .background-card {
+            grid-column: 1 / -1;
+        }
+
+        .background-text {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            font-size: 17px;
+            position: relative;
+        }
+
+        .background-text::before {
+            content: '"';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 70px;
+            color: rgba(126, 87, 194, 0.2);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(126, 87, 194, 0.3);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 25px;
+            }
+            
+            .logo {
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .gantt-header {
+                display: none;
+            }
+
+            .gantt-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .gantt-row-timeline {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .ccrs-filters {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>Common Config Dashboard</h1>
+                    <p>Configuration Change Request Management</p>
+                </div>
+            </div>
+        </header>
+
+        <div id="dashboardContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading configuration data...</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="copyright">
+                Common Config Dashboard • Last updated: <span id="currentDate"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toISOString().split('T')[0];
+        
+        // Configuration YAML URL
+        const CONFIG_URL = './config.yaml';
+        
+        // Function to calculate week numbers
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+        
+        // Function to calculate week difference
+        function weeksBetween(startDate, endDate) {
+            return Math.round((endDate - startDate) / (7 * 24 * 60 * 60 * 1000));
+        }
+        
+        // Create HTML elements for Gantt chart
+        function createGanttChart(projects) {
+            if (!projects || projects.length === 0) {
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
+                    </div>
+                    <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        No projects configured
+                    </p>
+                </div>
+                `;
+            }
+            
+            // Calculate date range
+            const allDates = projects.flatMap(p => [
+                new Date(p.start_date),
+                new Date(p.end_date),
+                new Date(p.freeze_date)
+            ]);
+            
+            const minDate = new Date(Math.min(...allDates.map(d => d.getTime())));
+            const maxDate = new Date(Math.max(...allDates.map(d => d.getTime())));
+            
+            // Calculate total weeks in timeline
+            const totalWeeks = weeksBetween(minDate, maxDate);
+            const startWeek = getWeekNumber(minDate);
+            
+            // Generate week headers
+            let weekHeaders = '';
+            for (let i = 0; i <= totalWeeks; i++) {
+                weekHeaders += `<div class="gantt-week">CW ${startWeek + i}</div>`;
+            }
+            
+            // Generate project rows
+            let projectRows = '';
+            projects.forEach(project => {
+                const startDate = new Date(project.start_date);
+                const endDate = new Date(project.end_date);
+                const freezeDate = new Date(project.freeze_date);
+                
+                const startOffset = weeksBetween(minDate, startDate);
+                const duration = weeksBetween(startDate, endDate);
+                const freezeOffset = weeksBetween(minDate, freezeDate);
+                
+                const barPosition = (startOffset / totalWeeks) * 100;
+                const barWidth = (duration / totalWeeks) * 100;
+                const freezePosition = (freezeOffset / totalWeeks) * 100;
+                
+                projectRows += `
+                <div class="gantt-row">
+                    <div class="gantt-row-project">${project.name}</div>
+                    <div class="gantt-row-timeline">
+                        <div class="gantt-bar" 
+                             style="left: ${barPosition}%; width: ${barWidth}%;"
+                             title="${project.name}: ${project.start_date} to ${project.end_date}">
+                        </div>
+                        <div class="gantt-milestone" 
+                             style="left: ${freezePosition}%;"
+                             title="Freeze Date: ${project.freeze_date}"></div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            return `
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
+                </div>
+                <div class="gantt-container">
+                    <div class="gantt-header">
+                        <div class="gantt-header-project">Project</div>
+                        <div class="gantt-header-timeline">
+                            ${weekHeaders}
+                        </div>
+                    </div>
+                    <div class="gantt-body">
+                        ${projectRows}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+        
+        // Create HTML elements for CCRs
+        function createCCRsContent(ccrs, projectFilters) {
+            return `
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
+                </div>
+                <div class="ccrs-filters">
+                    <div class="filter-section">
+                        <div class="filter-section-title">Project:</div>
+                        <button class="filter-btn active" data-filter="all" data-type="project">
+                            All Projects
+                        </button>
+                        ${projectFilters.map(project => `
+                        <button class="filter-btn" data-filter="${project}" data-type="project">
+                            ${project}
+                        </button>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-section-title">State:</div>
+                        <button class="filter-btn active" data-filter="all" data-type="state">
+                            All States
+                        </button>
+                        <button class="filter-btn" data-filter="open" data-type="state">
+                            Open
+                        </button>
+                        <button class="filter-btn" data-filter="in_progress" data-type="state">
+                            In Progress
+                        </button>
+                        <button class="filter-btn" data-filter="integrated" data-type="state">
+                            Fulfilled
+                        </button>
+                    </div>
+                </div>
+                <div class="ccrs-list" id="ccrsContainer">
+                    ${ccrs && ccrs.length > 0 ? ccrs.map(ccr => `
+                    <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}">
+                        <div class="ccr-state-badge ccr-state-${ccr.state}">
+                            ${ccr.state.replace('_', ' ').toUpperCase()}
+                        </div>
+                        <div class="ccr-header">
+                            <div class="ccr-title">${ccr.title}</div>
+                            <div class="ccr-project">${ccr.project}</div>
+                        </div>
+                        <div class="ccr-body">${ccr.body}</div>
+                        <div class="ccr-footer">
+                            <div>Created: ${ccr.created || 'N/A'}</div>
+                        </div>
+                    </div>
+                    `).join('') : `
+                    <div class="no-ccrs-message" id="noCCRsMessage">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No configuration change requests</h3>
+                        <p>All requests are completed or none are configured</p>
+                    </div>
+                    `}
+                </div>
+            </div>
+            `;
+        }
+        
+        // Create HTML elements for background
+        function createBackgroundContent(text) {
+            return `
+            <div class="card background-card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-scroll"></i> Background</h2>
+                </div>
+                <p class="background-text">
+                    ${text}
+                </p>
+            </div>
+            `;
+        }
+        
+        // Filter CCRs
+        function filterCCRs() {
+            const projectFilter = document.querySelector('.filter-btn.active[data-type="project"]').dataset.filter;
+            const stateFilter = document.querySelector('.filter-btn.active[data-type="state"]').dataset.filter;
+            
+            const ccrs = document.querySelectorAll('.ccr-item');
+            const noCCRsMessage = document.getElementById('noCCRsMessage');
+            let visibleCount = 0;
+            
+            ccrs.forEach(ccr => {
+                const ccrProject = ccr.dataset.project;
+                const ccrState = ccr.dataset.state;
+                
+                const projectMatch = projectFilter === 'all' || ccrProject === projectFilter;
+                const stateMatch = stateFilter === 'all' || ccrState === stateFilter;
+                
+                if (projectMatch && stateMatch) {
+                    ccr.style.display = '';
+                    visibleCount++;
+                } else {
+                    ccr.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no CCRs message
+            if (noCCRsMessage) {
+                if (visibleCount === 0) {
+                    noCCRsMessage.style.display = 'block';
+                } else {
+                    noCCRsMessage.style.display = 'none';
+                }
+            }
+        }
+        
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Load YAML configuration
+                const response = await fetch(CONFIG_URL);
+                if (!response.ok) throw new Error('Failed to load config');
+                
+                const yamlText = await response.text();
+                const config = jsyaml.load(yamlText);
+                
+                // Create dashboard content
+                const dashboardContent = `
+                <div class="grid">
+                    ${createGanttChart(config.projects)}
+                    ${createCCRsContent(config.change_requests, config.project_filters)}
+                    ${createBackgroundContent(config.background_text)}
+                </div>
+                `;
+                
+                document.getElementById('dashboardContent').innerHTML = dashboardContent;
+                
+                // Add event listeners for filters
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // Update active button
+                        const filterType = this.dataset.type;
+                        document.querySelectorAll(`.filter-btn[data-type="${filterType}"]`).forEach(b => 
+                            b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Filter CCRs
+                        filterCCRs();
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('dashboardContent').innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-exclamation-triangle"></i> Error</h2>
+                    </div>
+                    <p style="padding: 30px; text-align: center; color: var(--accent);">
+                        Failed to load configuration: ${error.message}<br>
+                        Make sure config.yaml exists in the same directory
+                    </p>
+                </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
