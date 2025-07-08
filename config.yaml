@@ -2,28 +2,19 @@
 projects:
   - name: "mHEV"
     start_date: "2025-01-06"
-    end_date: "2025-12-15"
-    freeze_date: "2025-10-20"
-    
-  - name: "HEV"
-    start_date: "2025-03-10"
-    end_date: "2025-11-30"
-    freeze_date: "2025-09-15"
+    end_date: "2025-03-15"
+    freeze_date: "2025-02-20"
     
   - name: "pHEV"
     start_date: "2025-02-15"
-    end_date: "2025-10-31"
-    freeze_date: "2025-08-25"
+    end_date: "2025-04-31"
+    freeze_date: "2025-03-25"
     
   - name: "MQB27"
     start_date: "2025-04-01"
-    end_date: "2025-12-20"
-    freeze_date: "2025-10-10"
+    end_date: "2025-06-20"
+    freeze_date: "2025-05-10"
     
-  - name: "PL PK"
-    start_date: "2025-05-12"
-    end_date: "2026-01-15"
-    freeze_date: "2025-11-20"
 
 # Configuration Change Requests
 change_requests:
