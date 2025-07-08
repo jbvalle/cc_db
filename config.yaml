@@ -15,6 +15,10 @@ projects:
     end_date: "2025-06-20"
     freeze_date: "2025-05-10"
     
+  - name: "CommonConfig 2.4.0"
+    start_date: "2025-01-06"
+    end_date: "2025-03-15"
+    commonconfig: "true"
 
 # Configuration Change Requests
 change_requests:

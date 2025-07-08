@@ -22,6 +22,7 @@
             --text-secondary: #a0a0c0;
             --border-radius: 16px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --common-config: #66bb6a; /* Green color for common config */
         }
 
         * {
@@ -251,8 +252,7 @@
         }
 
         .gantt-bar.common-config {
-            background: linear-gradient(90deg, var(--success), #4dd0e1);
-            opacity: 0.8;
+            background: linear-gradient(90deg, var(--common-config), #8bc34a);
         }
 
         .gantt-bar:hover {
@@ -503,6 +503,18 @@
             100% { transform: rotate(360deg); }
         }
 
+        .project-dates {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .common-config-dates {
+            color: var(--common-config);
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 gap: 20px;
@@ -596,48 +608,26 @@
         }
         
         // Create HTML elements for Gantt chart
-        function createGanttChart(projects, commonConfig) {
-            if ((!projects || projects.length === 0) && !commonConfig) {
+        function createGanttChart(projects) {
+            if (!projects || projects.length === 0) {
                 return `
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
                     </div>
                     <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                        No projects or common config configured
+                        No projects configured
                     </p>
                 </div>
                 `;
             }
             
-            // Calculate date range including common config if it exists
-            let allDates = [];
-            
-            if (projects && projects.length > 0) {
-                allDates = projects.flatMap(p => [
-                    new Date(p.start_date),
-                    new Date(p.end_date),
-                    new Date(p.freeze_date)
-                ]);
-            }
-            
-            if (commonConfig && commonConfig.start_date && commonConfig.end_date) {
-                allDates.push(new Date(commonConfig.start_date));
-                allDates.push(new Date(commonConfig.end_date));
-            }
-            
-            if (allDates.length === 0) {
-                return `
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
-                    </div>
-                    <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                        No valid date ranges found
-                    </p>
-                </div>
-                `;
-            }
+            // Calculate date range
+            const allDates = projects.flatMap(p => [
+                new Date(p.start_date),
+                new Date(p.end_date),
+                ...(p.freeze_date ? [new Date(p.freeze_date)] : [])
+            ]);
             
             const minDate = new Date(Math.min(...allDates.map(d => d.getTime())));
             const maxDate = new Date(Math.max(...allDates.map(d => d.getTime())));
@@ -654,62 +644,44 @@
             
             // Generate project rows
             let projectRows = '';
-            
-            // Add common config row if it exists
-            if (commonConfig && commonConfig.start_date && commonConfig.end_date) {
-                const startDate = new Date(commonConfig.start_date);
-                const endDate = new Date(commonConfig.end_date);
+            projects.forEach(project => {
+                const startDate = new Date(project.start_date);
+                const endDate = new Date(project.end_date);
+                const freezeDate = project.freeze_date ? new Date(project.freeze_date) : null;
+                const isCommonConfig = project.commonconfig === "true";
                 
                 const startOffset = weeksBetween(minDate, startDate);
                 const duration = weeksBetween(startDate, endDate);
+                const freezeOffset = freezeDate ? weeksBetween(minDate, freezeDate) : null;
                 
                 const barPosition = (startOffset / totalWeeks) * 100;
                 const barWidth = (duration / totalWeeks) * 100;
+                const freezePosition = freezeOffset ? (freezeOffset / totalWeeks) * 100 : null;
+                
+                const datesHtml = isCommonConfig 
+                    ? `<div class="project-dates common-config-dates">${project.start_date} to ${project.end_date}</div>`
+                    : `<div class="project-dates">${project.start_date} to ${project.end_date}</div>`;
                 
                 projectRows += `
                 <div class="gantt-row">
-                    <div class="gantt-row-project"><strong>Common Config</strong></div>
+                    <div class="gantt-row-project">
+                        ${project.name}
+                        ${datesHtml}
+                    </div>
                     <div class="gantt-row-timeline">
-                        <div class="gantt-bar common-config" 
+                        <div class="gantt-bar ${isCommonConfig ? 'common-config' : ''}" 
                              style="left: ${barPosition}%; width: ${barWidth}%;"
-                             title="Common Config: ${commonConfig.start_date} to ${commonConfig.end_date}">
+                             title="${project.name}: ${project.start_date} to ${project.end_date}">
                         </div>
+                        ${freezePosition ? `
+                        <div class="gantt-milestone" 
+                             style="left: ${freezePosition}%;"
+                             title="Freeze Date: ${project.freeze_date}"></div>
+                        ` : ''}
                     </div>
                 </div>
                 `;
-            }
-            
-            // Add project rows if they exist
-            if (projects && projects.length > 0) {
-                projects.forEach(project => {
-                    const startDate = new Date(project.start_date);
-                    const endDate = new Date(project.end_date);
-                    const freezeDate = new Date(project.freeze_date);
-                    
-                    const startOffset = weeksBetween(minDate, startDate);
-                    const duration = weeksBetween(startDate, endDate);
-                    const freezeOffset = weeksBetween(minDate, freezeDate);
-                    
-                    const barPosition = (startOffset / totalWeeks) * 100;
-                    const barWidth = (duration / totalWeeks) * 100;
-                    const freezePosition = (freezeOffset / totalWeeks) * 100;
-                    
-                    projectRows += `
-                    <div class="gantt-row">
-                        <div class="gantt-row-project">${project.name}</div>
-                        <div class="gantt-row-timeline">
-                            <div class="gantt-bar" 
-                                 style="left: ${barPosition}%; width: ${barWidth}%;"
-                                 title="${project.name}: ${project.start_date} to ${project.end_date}">
-                            </div>
-                            <div class="gantt-milestone" 
-                                 style="left: ${freezePosition}%;"
-                                 title="Freeze Date: ${project.freeze_date}"></div>
-                        </div>
-                    </div>
-                    `;
-                });
-            }
+            });
             
             return `
             <div class="card">
@@ -873,7 +845,7 @@
                 // Create dashboard content
                 const dashboardContent = `
                 <div class="dashboard-grid">
-                    ${createGanttChart(config.projects, config.common_config)}
+                    ${createGanttChart(config.projects)}
                     ${createCCRsContent(config.change_requests, config.project_filters)}
                     ${createBackgroundContent(config.background_text)}
                 </div>
