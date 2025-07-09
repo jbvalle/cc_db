@@ -60,7 +60,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             position: relative;
         }
 
@@ -148,6 +148,90 @@
             0% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
             100% { transform: translateY(0); }
+        }
+        
+        /* Progress Bar Styles */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .progress-label span:first-child {
+            color: var(--primary-light);
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--common-config), #8bc34a);
+            border-radius: 8px;
+            transition: width 1.5s ease;
+            box-shadow: 0 0 15px rgba(102, 187, 106, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .progress-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-stat.integrated {
+            color: var(--success);
+        }
+        
+        .progress-stat.in_progress {
+            color: var(--secondary);
+        }
+        
+        .progress-stat.open {
+            color: var(--warning);
         }
 
         .dashboard-grid {
@@ -602,6 +686,16 @@
                 margin-top: 15px;
             }
 
+            .progress-container {
+                padding: 15px;
+            }
+
+            .progress-stats {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
             .gantt-header {
                 display: none;
             }
@@ -638,7 +732,7 @@
         <header>
             <div class="logo">
                 <div class="logo-icon">
-                    <img src="icon.png" alt="Common Config Icon">
+                    <img src="https://raw.githubusercontent.com/jbvalle/kyrax/refs/heads/main/assets/kyrax_character_img_color.jpeg" alt="Common Config Icon">
                 </div>
                 <div class="logo-text">
                     <h1>Common Config Dashboard</h1>
@@ -650,6 +744,30 @@
                 <span id="versionBadge">CommonConfig 2.4.0</span>
             </div>
         </header>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span><i class="fas fa-tasks"></i> Configuration Progress</span>
+                <span id="progressPercentage">0% Complete</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat integrated">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="integratedCount">0</span> Integrated
+                </div>
+                <div class="progress-stat in_progress">
+                    <i class="fas fa-sync-alt"></i>
+                    <span id="inProgressCount">0</span> In Progress
+                </div>
+                <div class="progress-stat open">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="openCount">0</span> Open
+                </div>
+            </div>
+        </div>
 
         <div id="dashboardContent">
             <div class="loading">
@@ -687,6 +805,27 @@
         // Function to calculate week difference
         function weeksBetween(startDate, endDate) {
             return Math.round((endDate - startDate) / (7 * 24 * 60 * 60 * 1000));
+        }
+        
+        // Update progress bar
+        function updateProgressBar(ccrs) {
+            if (!ccrs || ccrs.length === 0) return;
+            
+            const openCCRs = ccrs.filter(c => c.state === 'open').length;
+            const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
+            const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
+            const totalCCRs = ccrs.length;
+            
+            const progressPercentage = Math.round((integratedCCRs / totalCCRs) * 100);
+            
+            // Update progress bar
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+            document.getElementById('progressPercentage').textContent = `${progressPercentage}% Complete`;
+            
+            // Update counts
+            document.getElementById('openCount').textContent = openCCRs;
+            document.getElementById('inProgressCount').textContent = inProgressCCRs;
+            document.getElementById('integratedCount').textContent = integratedCCRs;
         }
         
         // Create HTML elements for Gantt chart
@@ -940,6 +1079,9 @@
                     document.getElementById('versionBadge').textContent = 
                         `CommonConfig ${config.common_config_version}`;
                 }
+                
+                // Update progress bar
+                updateProgressBar(config.change_requests);
                 
                 // Add event listeners for filters
                 document.querySelectorAll('.filter-btn').forEach(btn => {
