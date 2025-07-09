@@ -5,3 +5,5 @@
 ```
 pip install pyyaml inquirer rich
 ```
+
+### Maintainers
