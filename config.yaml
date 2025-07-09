@@ -21,39 +21,36 @@ projects:
   freeze_date: '2025-07-11'
   commonconfig: 'true'
 change_requests:
-- title: RQONE04617456 - MG1CS311 DMA load Calculation - Config Removal
-  body: '[BCC : IoSrv]'
+- title: RQONE04617456
+  body: '[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal'
   project: CommonConfig 2.4.0
   state: in_progress
   created: '2025-07-09'
-- title: "RQONE04617836 - Konfig \xC4nderung zur Korrektur der DGDI-s Feedback-Signale\
-    \ (Busy-Signale der beiden DGDI-s) - Funktion"
-  body: "[BCC : IoExtDev] Konfig \xC4nderung aus FCC-AR : rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01;\
+- title: "RQONE04617836"
+  body: "[BCC : IoExtDev]  - Konfig \xC4nderung zur Korrektur der DGDI-s Feedback-Signale\
+    \ (Busy-Signale der beiden DGDI-s) - Funktion\ Konfig \xC4nderung aus FCC-AR : rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01;\
     \ 0  \xFCbernehmen"
   project: CommonConfig 2.4.0
   state: in_progress
   created: '2025-07-09'
-- title: RQONE04617193 - Enabling NoC Error Logger Register Access Without Debugger
-    Connection via HOST_DEBUG_EN Software Workaround
-  body: '[BCC : BswLib] The key register writes are:'
+- title: "RQONE04617193" 
+  body: "[BCC : BswLib] - Enabling NoC Error Logger Register Access Without Debugger
+    Connection via HOST_DEBUG_EN Software Workaround"
   project: mHEV
   state: in_progress
   created: '2025-07-09'
-- title: RQONE04661229 - Correction of ISR Call for Shutdown Task Scheduling in EbOs
-  body: '[BCC : EbOS] Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0'
+- title: "RQONE04661229"
+  body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs. Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0'
   project: CommonConfig 2.4.0
   state: in_progress
   created: '2025-07-09'
-- title: 'RQONE04630550 - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC
-    : EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1)'
-  body: '[BCC : ESM] Take over from SWSRC : EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00;
-    0'
+- title: "RQONE04630550"
+  body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC: EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 0'
   project: CommonConfig 2.4.0
   state: in_progress
   created: '2025-07-09'
-- title: 'RQONE04666209 - [Common Config 2.4.0] BCC  Analysis and Creation :  BswLib,
-    Rte, EbOs'
-  body: '[BCC : BswLib, Rte, EbOs]'
+- title: 'RQONE04666209'
+  body: '[BCC : BswLib, Rte, EbOs]- [Common Config 2.4.0] BCC  Analysis and Creation :  BswLib, Rte, EbOs'
   project: mHEV
   state: in_progress
   created: '2025-07-09'
