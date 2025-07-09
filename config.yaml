@@ -1,5 +1,4 @@
-# Common Config Version
-commonconfig_version: "2.4.0"
+common_config_version: "2.4.0"
 
 # Projects configuration
 projects:
