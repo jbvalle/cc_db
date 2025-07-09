@@ -23,6 +23,7 @@
             --border-radius: 16px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --common-config: #66bb6a; /* Green color for common config */
+            --current-week: #ff7043; /* Accent color for current week */
         }
 
         * {
@@ -418,6 +419,60 @@
             padding: 2px 6px;
             border-radius: 4px;
             white-space: nowrap;
+        }
+
+        /* Current Week Highlight */
+        .gantt-week.current-week {
+            color: white;
+            font-weight: bold;
+            z-index: 2;
+            position: relative;
+        }
+
+        .gantt-week.current-week::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(135deg, var(--current-week), #ff9a76);
+            border-radius: 8px;
+            z-index: -1;
+            box-shadow: 0 0 20px rgba(255, 112, 67, 0.7);
+            animation: pulse-current 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-current {
+            0% { box-shadow: 0 0 10px rgba(255, 112, 67, 0.7); }
+            50% { box-shadow: 0 0 25px rgba(255, 112, 67, 0.9); }
+            100% { box-shadow: 0 0 10px rgba(255, 112, 67, 0.7); }
+        }
+
+        .current-week-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 112, 67, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--current-week);
+        }
+
+        .current-week-badge {
+            background: linear-gradient(135deg, var(--current-week), #ff9a76);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(255, 112, 67, 0.3);
+        }
+
+        .current-week-text {
+            font-size: 14px;
+            color: var(--text);
         }
 
         /* CCR Filter Styles */
@@ -857,10 +912,15 @@
             const totalWeeks = weeksBetween(minDate, maxDate);
             const startWeek = getWeekNumber(minDate);
             
+            // Get current week number
+            const currentWeek = getWeekNumber(new Date());
+            
             // Generate week headers
             let weekHeaders = '';
             for (let i = 0; i <= totalWeeks; i++) {
-                weekHeaders += `<div class="gantt-week">CW ${startWeek + i}</div>`;
+                const weekNumber = startWeek + i;
+                const isCurrentWeek = weekNumber === currentWeek;
+                weekHeaders += `<div class="gantt-week ${isCurrentWeek ? 'current-week' : ''}">CW ${weekNumber}</div>`;
             }
             
             // Generate project rows
@@ -919,6 +979,10 @@
                     <div class="gantt-body">
                         ${projectRows}
                     </div>
+                </div>
+                <div class="current-week-indicator">
+                    <span class="current-week-badge">CW ${currentWeek}</span>
+                    <span class="current-week-text">Current calendar week highlighted</span>
                 </div>
             </div>
             `;
