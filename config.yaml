@@ -18,7 +18,7 @@ projects:
 - name: CommonConfig 2.4.0
   start_date: '2025-05-21'
   end_date: '2025-07-16'
-  freeze_date: '2025-07-14'
+  freeze_date: '2025-07-11'
   commonconfig: 'true'
 change_requests:
 - title: RQONE04617456 - MG1CS311 DMA load Calculation - Config Removal
