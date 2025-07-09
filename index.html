@@ -7,6 +7,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Added floating version badge styles */
+        .version-badge {
+            background: linear-gradient(135deg, var(--common-config), #8bc34a);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 20px rgba(102, 187, 106, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: float 3s ease-in-out infinite;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+        
         :root {
             --bg-dark: #0c0c14;
             --bg-card: #1a1a2e;
@@ -555,11 +580,26 @@
             .ccrs-list {
                 grid-template-columns: 1fr;
             }
+            
+            /* Mobile adjustments for floating badge */
+            .version-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 15px auto;
+                width: max-content;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Floating version badge -->
+        <div class="version-badge" id="versionBadge">
+            <i class="fas fa-code-branch"></i>
+            <span>Loading version...</span>
+        </div>
+        
         <header>
             <div class="logo">
                 <div class="logo-text">
@@ -841,6 +881,14 @@
                 
                 const yamlText = await response.text();
                 const config = jsyaml.load(yamlText);
+                
+                // Update version badge
+                if (config.commonconfig_version) {
+                    document.getElementById('versionBadge').innerHTML = `
+                        <i class="fas fa-code-branch"></i>
+                        <span>CommonConfig ${config.commonconfig_version}</span>
+                    `;
+                }
                 
                 // Create dashboard content
                 const dashboardContent = `
