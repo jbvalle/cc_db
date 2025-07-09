@@ -1,86 +1,77 @@
-common_config_version: "2.4.0"
-
-# Projects configuration
+common_config_version: 2.4.0
 projects:
-  - name: "mHEV"
-    start_date: "2025-01-06"
-    end_date: "2025-03-15"
-    freeze_date: "2025-02-20"
-    
-  - name: "pHEV"
-    start_date: "2025-02-15"
-    end_date: "2025-04-31"
-    freeze_date: "2025-03-25"
-    
-  - name: "MQB27"
-    start_date: "2025-04-01"
-    end_date: "2025-06-20"
-    freeze_date: "2025-05-10"
-    
-  - name: "CommonConfig 2.3.0"
-    start_date: "2025-01-06"
-    end_date: "2025-03-15"
-    freeze_date: "2025-02-20"
-    commonconfig: "true"
-
-  - name: "CommonConfig 2.4.0"
-    start_date: "2025-01-06"
-    end_date: "2025-03-15"
-    freeze_date: "2025-02-20"
-    commonconfig: "true"
-
-# Configuration Change Requests
+- name: mHEV
+  start_date: '2025-01-06'
+  end_date: '2025-03-15'
+  freeze_date: '2025-02-20'
+  commonconfig: 'false'
+- name: pHEV
+  start_date: '2025-02-15'
+  end_date: '2025-04-31'
+  freeze_date: '2025-03-25'
+- name: MQB27
+  start_date: '2025-04-01'
+  end_date: '2025-06-20'
+  freeze_date: '2025-05-10'
+- name: CommonConfig 2.3.0
+  start_date: '2025-01-06'
+  end_date: '2025-03-15'
+  freeze_date: '2025-02-20'
+  commonconfig: 'true'
+- name: CommonConfig 2.4.0
+  start_date: '2025-01-06'
+  end_date: '2025-03-15'
+  freeze_date: '2025-02-20'
+  commonconfig: 'true'
 change_requests:
-  - title: "Update CAN matrix"
-    body: "Add new CAN nodes for hybrid functionality and update communication protocols"
-    state: "open"
-    project: "mHEV"
-    created: "2025-03-15"
-    
-  - title: "Adjust torque parameters"
-    body: "Optimize torque delivery for electric motor and improve power distribution algorithms"
-    state: "in_progress"
-    project: "pHEV"
-    created: "2025-04-02"
-    
-  - title: "Implement energy recovery"
-    body: "Add configuration for regenerative braking system and update energy storage thresholds"
-    state: "integrated"
-    project: "HEV"
-    created: "2025-02-20"
-    
-  - title: "Update infotainment settings"
-    body: "Add new display modes for hybrid systems and update UI elements"
-    state: "open"
-    project: "MQB27"
-    created: "2025-05-10"
-    
-  - title: "Battery management calibration"
-    body: "Optimize charging parameters for new battery chemistry and update thermal management profiles"
-    state: "in_progress"
-    project: "PL PK"
-    created: "2025-06-18"
-    
-  - title: "Thermal management update"
-    body: "Adjust cooling thresholds for electric components and improve efficiency algorithms"
-    state: "integrated"
-    project: "mHEV"
-    created: "2025-03-28"
-    
-  - title: "Safety system integration"
-    body: "Implement new collision avoidance parameters and update sensor calibration"
-    state: "open"
-    project: "HEV"
-    created: "2025-07-05"
-    
-  - title: "Power distribution optimization"
-    body: "Refine power distribution between ICE and electric motor for better efficiency"
-    state: "in_progress"
-    project: "pHEV"
-    created: "2025-06-22"
-
-# Project filter options
-project_filters: ["mHEV", "HEV", "pHEV", "MQB27", "PL PK"]
-
-# Background text
-background_text: "CommonConfig delivers fast - high prio requests 1-2 days, standard in 2-3 days. We'll even testintegrate it and support as well."
+- title: Update CAN matrix
+  body: Add new CAN nodes for hybrid functionality and update communication protocols
+  state: open
+  project: mHEV
+  created: '2025-03-15'
+- title: Adjust torque parameters
+  body: Optimize torque delivery for electric motor and improve power distribution
+    algorithms
+  state: in_progress
+  project: pHEV
+  created: '2025-04-02'
+- title: Implement energy recovery
+  body: Add configuration for regenerative braking system and update energy storage
+    thresholds
+  state: integrated
+  project: HEV
+  created: '2025-02-20'
+- title: Update infotainment settings
+  body: Add new display modes for hybrid systems and update UI elements
+  state: open
+  project: MQB27
+  created: '2025-05-10'
+- title: Battery management calibration
+  body: Optimize charging parameters for new battery chemistry and update thermal
+    management profiles
+  state: in_progress
+  project: PL PK
+  created: '2025-06-18'
+- title: Thermal management update
+  body: Adjust cooling thresholds for electric components and improve efficiency algorithms
+  state: integrated
+  project: mHEV
+  created: '2025-03-28'
+- title: Safety system integration
+  body: Implement new collision avoidance parameters and update sensor calibration
+  state: open
+  project: HEV
+  created: '2025-07-05'
+- title: Power distribution optimization
+  body: Refine power distribution between ICE and electric motor for better efficiency
+  state: in_progress
+  project: pHEV
+  created: '2025-06-22'
+project_filters:
+- mHEV
+- HEV
+- pHEV
+- MQB27
+- PL PK
+background_text: CommonConfig delivers fast - high prio requests 1-2 days, standard
+  in 2-3 days. We'll even testintegrate it and support as well.
