@@ -31,13 +31,13 @@ change_requests:
     \ (Busy-Signale der beiden DGDI-s) - Funktion Konfig \xC4nderung aus FCC-AR :\
     \ rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01; 0  \xFCbernehmen"
   project: CC2.4.0
-  state: in_progress
+  state: open
   created: '2025-07-09'
 - title: RQONE04617193
   body: '[BCC : BswLib] - Enabling NoC Error Logger Register Access Without Debugger
     Connection via HOST_DEBUG_EN Software Workaround'
   project: mHEV
-  state: in_progress
+  state: open
   created: '2025-07-09'
 - title: RQONE04661229
   body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
@@ -55,13 +55,13 @@ change_requests:
 - title: RQONE04637578
   body: ' BCC Analysis and Creation : Changes from  P2444 line'
   project: pHEV
-  state: in_progress
+  state: open
   created: '2025-07-10'
 - title: RQONE04477120
   body: '[BCC : IoExtDev ???] [IoExtFscDosVlv] and [IoExtFscHlfBr] Perl to java migration
     to support BCT for AR4.5'
   project: CC2.4.0
-  state: in_progress
+  state: open
   created: '2025-07-10'
 - title: RQONE04651180
   body: '[BCC : SrvLibs] [ST5_28nm Projects] Update BC : SrvLibs to BSW2504'
