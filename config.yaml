@@ -76,7 +76,7 @@ change_requests:
   created: '2025-07-10'
 - title: RQONE04666209
   body: '[BCC : BswLib, Rte, EbOs] [Common Config 2.4.0] BCC  Analysis and Creation
-    :  BswLib, Rte, EbOs'
+    :  BswLib, Rte, EbOs, [test integrated] CC : CONFIG / RQONE04666209_BSWLIB_RTE_EBOS; 0'
   project: mHEV
   state: in_progress
   created: '2025-07-10'
