@@ -22,7 +22,7 @@ projects:
   commonconfig: 'true'
 change_requests:
 - title: RQONE04617456
-  body: '[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal'
+  body: "[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal - SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0"
   project: CC2.4.0
   state: in_progress
   created: '2025-07-09'
@@ -73,6 +73,12 @@ change_requests:
     / N26K10 - RQONE04253582'
   project: HEV
   state: open
+  created: '2025-07-10'
+- title: RQONE04666209
+  body: '[BCC : BswLib, Rte, EbOs] [Common Config 2.4.0] BCC  Analysis and Creation
+    :  BswLib, Rte, EbOs'
+  project: mHEV
+  state: in_progress
   created: '2025-07-10'
 project_filters:
 - mHEV
