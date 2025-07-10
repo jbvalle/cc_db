@@ -22,7 +22,7 @@ projects:
   commonconfig: 'true'
 change_requests:
 - title: RQONE04617456
-  body: "[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal - SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0"
+  body: "[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal -\ [Test intergrated] SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0"
   project: CC2.4.0
   state: in_progress
   created: '2025-07-09'
