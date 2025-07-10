@@ -52,6 +52,28 @@ change_requests:
   project: CC2.4.0
   state: in_progress
   created: '2025-07-09'
+- title: RQONE04637578
+  body: ' BCC Analysis and Creation : Changes from  P2444 line'
+  project: pHEV
+  state: in_progress
+  created: '2025-07-10'
+- title: RQONE04477120
+  body: '[BCC : IoExtDev ???] [IoExtFscDosVlv] and [IoExtFscHlfBr] Perl to java migration
+    to support BCT for AR4.5'
+  project: CC2.4.0
+  state: in_progress
+  created: '2025-07-10'
+- title: RQONE04651180
+  body: '[BCC : SrvLibs] [ST5_28nm Projects] Update BC : SrvLibs to BSW2504'
+  project: mHEV
+  state: open
+  created: '2025-07-10'
+- title: RQONE04667930
+  body: '[Common Config 2.4.0] BCC Analysis and Creation : PVER : DMG1311VH4C1996
+    / N26K10 - RQONE04253582'
+  project: HEV
+  state: open
+  created: '2025-07-10'
 project_filters:
 - mHEV
 - pHEV
