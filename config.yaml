@@ -41,7 +41,7 @@ change_requests:
   created: '2025-07-09'
 - title: RQONE04661229
   body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
-    Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0'
+    Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
   project: CC2.4.0
   state: in_progress
   created: '2025-07-09'
