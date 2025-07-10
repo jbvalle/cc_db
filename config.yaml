@@ -48,7 +48,7 @@ change_requests:
 - title: RQONE04630550
   body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC:
     EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs
-    / 4.16.0_P282.0.0_G00; 0'
+    / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES; 0'
   project: CC2.4.0
   state: in_progress
   created: '2025-07-09'
