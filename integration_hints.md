@@ -1,6 +1,6 @@
-## 🧩 Common Config Test Integrations
+## ⚙️ Common Config Test Integrations
 
-### 📌 Common Config 2.4.0 - Integrated Changes
+### 🔧 Common Config 2.4.0 - Integrated Changes
 
 ---
 
