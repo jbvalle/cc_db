@@ -23,14 +23,14 @@ projects:
 change_requests:
 - title: RQONE04617456
   body: "[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal -\ [Test intergrated] SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0"
-  project: CC2.4.0
+  project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04617836
   body: "[BCC : IoExtDev]  - Konfig \xC4nderung zur Korrektur der DGDI-s Feedback-Signale\
     \ (Busy-Signale der beiden DGDI-s) - Funktion Konfig \xC4nderung aus FCC-AR :\
     \ rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01; 0  \xFCbernehmen"
-  project: CC2.4.0
+  project: internal-request
   state: open
   created: '2025-07-09'
 - title: RQONE04617193
@@ -42,14 +42,14 @@ change_requests:
 - title: RQONE04661229
   body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
     Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
-  project: CC2.4.0
+  project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04630550
   body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC:
     EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs
     / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES; 0'
-  project: CC2.4.0
+  project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04637578
@@ -60,7 +60,7 @@ change_requests:
 - title: RQONE04477120
   body: '[BCC : IoExtDev ???] [IoExtFscDosVlv] and [IoExtFscHlfBr] Perl to java migration
     to support BCT for AR4.5'
-  project: CC2.4.0
+  project: internal-request
   state: open
   created: '2025-07-10'
 - title: RQONE04651180
@@ -85,7 +85,7 @@ project_filters:
 - pHEV
 - MQB27
 - HEV
-- CC2.4.0
+- internal-request
 background_text: "
   ### Common Config Methodology – Faster, Smarter, Standardized<br>
   Our Common Config Methodology streamlines BSW configuration across all VW projects by centralizing expertise and execution.
