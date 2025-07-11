@@ -89,10 +89,20 @@ change_requests:
   project: internal-request
   state: fulfilled_prio
   created: '2025-07-11'
+- title: RQONE_TEST2
+  body: ''
+  project: internal-request
+  state: fulfilled_prio
+  created: '2025-07-11'
 project_filters:
 - mHEV
 - pHEV
 - MQB27
 - HEV
 - internal-request
-background_text: "Our Common Config Methodology delivers faster, smarter BSW configuration across VW projects through centralized expertise. Key benefits include: expert-validated configurations in 3-4 days (1-2 for urgent requests), standardized workflows that eliminate errors, and seamless collaboration between project teams and our specialists. This approach ensures consistent, compliant results while dramatically reducing rework. It's your single source for rapid, reliable configuration management."
+background_text: 'Our Common Config Methodology delivers faster, smarter BSW configuration
+  across VW projects through centralized expertise. Key benefits include: expert-validated
+  configurations in 3-4 days (1-2 for urgent requests), standardized workflows that
+  eliminate errors, and seamless collaboration between project teams and our specialists.
+  This approach ensures consistent, compliant results while dramatically reducing
+  rework. It''s your single source for rapid, reliable configuration management.'
