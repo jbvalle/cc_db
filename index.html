@@ -530,6 +530,40 @@
             box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
         }
 
+        /* Search Bar Styles */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 8px 15px;
+            width: 300px;
+            transition: var(--transition);
+            margin-bottom: 15px;
+        }
+
+        .search-container:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .search-container i {
+            color: var(--text-secondary);
+            margin-right: 8px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            outline: none;
+            width: 100%;
+        }
+
+        .search-container input::placeholder {
+            color: var(--text-secondary);
+        }
+
         /* CCR List Styles */
         .ccrs-list {
             display: grid;
@@ -829,6 +863,11 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            
+            .search-container {
+                width: 100%;
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
@@ -1061,6 +1100,12 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
                 </div>
+                <!-- Search bar container -->
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="ccrSearch" placeholder="Search by title or body...">
+                </div>
+                
                 <div class="ccrs-filters">
                     <div class="filter-section">
                         <div class="filter-section-title">Project:</div>
@@ -1092,7 +1137,8 @@
                 </div>
                 <div class="ccrs-list" id="ccrsContainer">
                     ${ccrs.map(ccr => `
-                    <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}">
+                    <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}" 
+                         data-title="${ccr.title.toLowerCase()}" data-body="${ccr.body.toLowerCase()}">
                         <div class="ccr-state-badge ccr-state-${ccr.state}">
                             ${ccr.state.replace('_', ' ').toUpperCase()}
                         </div>
@@ -1153,6 +1199,8 @@
         function filterCCRs() {
             const projectFilter = document.querySelector('.filter-btn.active[data-type="project"]').dataset.filter;
             const stateFilter = document.querySelector('.filter-btn.active[data-type="state"]').dataset.filter;
+            const searchInput = document.getElementById('ccrSearch');
+            const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
             
             const ccrs = document.querySelectorAll('.ccr-item');
             const noCCRsMessage = document.getElementById('noCCRsMessage');
@@ -1161,11 +1209,16 @@
             ccrs.forEach(ccr => {
                 const ccrProject = ccr.dataset.project;
                 const ccrState = ccr.dataset.state;
+                const ccrTitle = ccr.dataset.title || '';
+                const ccrBody = ccr.dataset.body || '';
                 
                 const projectMatch = projectFilter === 'all' || ccrProject === projectFilter;
                 const stateMatch = stateFilter === 'all' || ccrState === stateFilter;
+                const searchMatch = !searchTerm || 
+                                   ccrTitle.includes(searchTerm) || 
+                                   ccrBody.includes(searchTerm);
                 
-                if (projectMatch && stateMatch) {
+                if (projectMatch && stateMatch && searchMatch) {
                     ccr.style.display = '';
                     visibleCount++;
                 } else {
@@ -1237,6 +1290,12 @@
                         filterCCRs();
                     });
                 });
+                
+                // Add event listener for search input
+                const searchInput = document.getElementById('ccrSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('input', filterCCRs);
+                }
                 
             } catch (error) {
                 console.error('Error loading dashboard:', error);
