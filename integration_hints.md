@@ -25,4 +25,4 @@
 
 🔄 **RQONE04617456** — MG1CS311 DMA Load Calculation — Config Removal  
 - **PHEV:** ✅ PVER: DMG1311VH1C2444 / RQONE04617456_IOSRV_MG1CS311_DMA; 0  
-- **MQB27:**  
+- **MQB27:**  ⚠️ (Pending)
