@@ -84,16 +84,6 @@ change_requests:
   project: mHEV
   state: in_progress
   created: '2025-07-10'
-- title: RQONE_TEST1
-  body: ''
-  project: internal-request
-  state: fulfilled_prio
-  created: '2025-07-11'
-- title: RQONE_TEST2
-  body: ''
-  project: internal-request
-  state: fulfilled_prio
-  created: '2025-07-11'
 project_filters:
 - mHEV
 - pHEV
