@@ -641,58 +641,43 @@
             display: none;
         }
 
-        .background-text {
-            line-height: 1.8;
-            color: var(--text-secondary);
+        .card-content-box {
             background: rgba(255, 255, 255, 0.04);
             padding: 30px;
             border-radius: 12px;
             border-left: 4px solid var(--primary);
-            font-size: 17px;
             position: relative;
         }
 
-        .background-text::before {
-            content: '"';
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 70px;
-            color: rgba(126, 87, 194, 0.2);
-            font-family: Georgia, serif;
-            line-height: 1;
-        }
-
-        /* New styles for markdown content */
-        .integration-hints-content {
+        .markdown-content {
             line-height: 1.8;
             color: var(--text-secondary);
             font-size: 16px;
         }
         
-        .integration-hints-content h1,
-        .integration-hints-content h2,
-        .integration-hints-content h3 {
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 {
             color: var(--primary-light);
             margin-top: 1.5em;
             margin-bottom: 0.5em;
         }
         
-        .integration-hints-content p {
+        .markdown-content p {
             margin-bottom: 1em;
         }
         
-        .integration-hints-content ul,
-        .integration-hints-content ol {
+        .markdown-content ul,
+        .markdown-content ol {
             padding-left: 20px;
             margin-bottom: 1em;
         }
         
-        .integration-hints-content li {
+        .markdown-content li {
             margin-bottom: 0.5em;
         }
         
-        .integration-hints-content code {
+        .markdown-content code {
             background: rgba(255, 255, 255, 0.08);
             padding: 2px 6px;
             border-radius: 4px;
@@ -700,7 +685,7 @@
             color: var(--accent);
         }
         
-        .integration-hints-content pre {
+        .markdown-content pre {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
@@ -709,19 +694,19 @@
             margin: 1.5em 0;
         }
         
-        .integration-hints-content pre code {
+        .markdown-content pre code {
             background: none;
             padding: 0;
             border-radius: 0;
             color: var(--text);
         }
         
-        .integration-hints-content a {
+        .markdown-content a {
             color: var(--secondary);
             text-decoration: none;
         }
         
-        .integration-hints-content a:hover {
+        .markdown-content a:hover {
             text-decoration: underline;
         }
 
@@ -1138,9 +1123,11 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-scroll"></i> Common Config Methodology</h2>
                 </div>
-                <p class="background-text">
-                    ${text}
-                </p>
+                <div class="card-content-box">
+                    <div class="markdown-content">
+                        ${marked.parse(text)}
+                    </div>
+                </div>
             </div>
             `;
         }
@@ -1153,8 +1140,10 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-lightbulb"></i> Integration Hints</h2>
                 </div>
-                <div class="integration-hints-content">
-                    ${htmlContent}
+                <div class="card-content-box">
+                    <div class="markdown-content">
+                        ${htmlContent}
+                    </div>
                 </div>
             </div>
             `;
