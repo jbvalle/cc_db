@@ -16,9 +16,10 @@
 ✅ RQONE04661229 | EbOS ISR Call Correction  
 ✅ RQONE04617456 | MG1CS311 DMA Config Removal  
 
+---
+
 ### 🔧 Detailed Common Config 2.4.0 - Integrated Changes
 
----
 
 🔄 **RQONE04666209** — [Common Config 2.4.0] BCC Analysis and Creation: BswLib, Rte, EbOs  
 - **PHEV:** ⚠️ (Pending)  
