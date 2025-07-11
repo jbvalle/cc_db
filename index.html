@@ -869,6 +869,12 @@
                 margin-top: 15px;
             }
         }
+        /* Add new badge style for fulfilled_prio */
+        .ccr-state-fulfilled_prio {
+            background: rgba(147, 112, 219, 0.2); /* MediumPurple with opacity */
+            color: #9370db; /* MediumPurple */
+        }
+
     </style>
 </head>
 <body>
@@ -952,16 +958,19 @@
             return Math.round((endDate - startDate) / (7 * 24 * 60 * 60 * 1000));
         }
         
-        // Update progress bar
+       // Update progress bar to exclude fulfilled_prio state
         function updateProgressBar(ccrs) {
             if (!ccrs || ccrs.length === 0) return;
             
-            const openCCRs = ccrs.filter(c => c.state === 'open').length;
-            const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
-            const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
-            const totalCCRs = ccrs.length;
+            // Filter out fulfilled_prio state
+            const relevantCCRs = ccrs.filter(c => c.state !== 'fulfilled_prio');
+            const totalCCRs = relevantCCRs.length;
             
-            const progressPercentage = Math.round((integratedCCRs / totalCCRs) * 100);
+            const openCCRs = relevantCCRs.filter(c => c.state === 'open').length;
+            const inProgressCCRs = relevantCCRs.filter(c => c.state === 'in_progress').length;
+            const integratedCCRs = relevantCCRs.filter(c => c.state === 'integrated').length;
+            
+            const progressPercentage = totalCCRs > 0 ? Math.round((integratedCCRs / totalCCRs) * 100) : 0;
             
             // Update progress bar
             document.getElementById('progressFill').style.width = `${progressPercentage}%`;
@@ -971,8 +980,8 @@
             document.getElementById('openCount').textContent = openCCRs;
             document.getElementById('inProgressCount').textContent = inProgressCCRs;
             document.getElementById('integratedCount').textContent = integratedCCRs;
-        }
-        
+        } 
+
         // Create HTML elements for Gantt chart
         function createGanttChart(projects) {
             if (!projects || projects.length === 0) {
@@ -1074,33 +1083,22 @@
             `;
         }
         
-        // Create HTML elements for CCRs
+       // Update CCRs content to include the new state
         function createCCRsContent(ccrs, projectFilters) {
             if (!ccrs || ccrs.length === 0) {
-                return `
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
-                    </div>
-                    <div class="no-ccrs-message" style="display: block;">
-                        <i class="fas fa-inbox"></i>
-                        <h3>No configuration change requests</h3>
-                        <p>All requests are completed or none are configured</p>
-                    </div>
-                </div>
-                `;
+                return `...`;
             }
             
             const openCCRs = ccrs.filter(c => c.state === 'open').length;
             const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
             const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
+            const fulfilledPrioCCRs = ccrs.filter(c => c.state === 'fulfilled_prio').length;
             
             return `
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
                 </div>
-                <!-- Search bar container -->
                 <div class="search-container">
                     <i class="fas fa-search"></i>
                     <input type="text" id="ccrSearch" placeholder="Search by title or body...">
@@ -1133,6 +1131,10 @@
                         <button class="filter-btn" data-filter="integrated" data-type="state">
                             Fulfilled (${integratedCCRs})
                         </button>
+                        <!-- NEW FILTER BUTTON -->
+                        <button class="filter-btn" data-filter="fulfilled_prio" data-type="state">
+                            Fulfilled (Prio Version) (${fulfilledPrioCCRs})
+                        </button>
                     </div>
                 </div>
                 <div class="ccrs-list" id="ccrsContainer">
@@ -1140,7 +1142,9 @@
                     <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}" 
                          data-title="${ccr.title.toLowerCase()}" data-body="${ccr.body.toLowerCase()}">
                         <div class="ccr-state-badge ccr-state-${ccr.state}">
-                            ${ccr.state.replace('_', ' ').toUpperCase()}
+                            ${ccr.state === 'fulfilled_prio' 
+                                ? 'FULFILLED (IN PRIO VERSION)' 
+                                : ccr.state.replace('_', ' ').toUpperCase()}
                         </div>
                         <div class="ccr-header">
                             <div class="ccr-title">${ccr.title}</div>
@@ -1161,7 +1165,7 @@
             </div>
             `;
         }
-        
+         
         // Create HTML elements for background
         function createBackgroundContent(text) {
             return `
