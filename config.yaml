@@ -38,7 +38,7 @@ change_requests:
   body: '[BCC : BswLib] - Enabling NoC Error Logger Register Access Without Debugger
     Connection via HOST_DEBUG_EN Software Workaround'
   project: mHEV
-  state: open
+  state: integrated
   created: '2025-07-09'
 - title: RQONE04661229
   body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
