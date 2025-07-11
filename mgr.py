@@ -273,16 +273,22 @@ def list_requests(requests, title="ALL CHANGE REQUESTS"):
     for req in requests:
         # Truncate body for display
         body_preview = req['body'][:30] + '...' if len(req['body']) > 30 else req['body']
+        
+        # State styling with new fulfilled_prio state
         state_style = {
             'open': 'bright_red',
             'in_progress': 'bright_yellow',
-            'integrated': 'bright_green'
+            'integrated': 'bright_green',
+            'fulfilled_prio': 'bright_magenta'  # NEW STATE STYLE
         }.get(req['state'], 'white')
+        
+        # Display text for new state
+        display_state = "fulfilled (prio)" if req['state'] == 'fulfilled_prio' else req['state']
         
         table.add_row(
             req['title'],
             req.get('project', 'N/A'),
-            f'[{state_style}]{req["state"]}[/{state_style}]',
+            f'[{state_style}]{display_state}[/{state_style}]',
             req.get('created', 'N/A'),
             body_preview
         )
@@ -293,7 +299,8 @@ def filter_requests(requests, filters):
     """Filter requests by project and state"""
     display_header("FILTER REQUESTS")
     
-    state_choices = ['open', 'in_progress', 'integrated', 'all']
+    # Add new state to choices
+    state_choices = ['open', 'in_progress', 'integrated', 'fulfilled_prio', 'all']
     filter_choices = filters + ['all']
     
     questions = [
@@ -316,12 +323,21 @@ def filter_requests(requests, filters):
     if filters['state'] != 'all':
         filtered = [r for r in filtered if r.get('state') == filters['state']]
     
-    title = f"REQUESTS: {filters['project'].upper()} | {filters['state'].upper().replace('_', ' ')}"
+    # Format title with state display name
+    state_display = {
+        'fulfilled_prio': 'fulfilled (prio)',
+        'in_progress': 'in progress'
+    }.get(filters['state'], filters['state'])
+    
+    title = f"REQUESTS: {filters['project'].upper()} | {state_display.upper()}"
     list_requests(filtered, title)
 
 def add_request(config, filters):
     """Add a new change request"""
     display_header("ADD CHANGE REQUEST")
+    
+    # Add new state to choices
+    state_choices = ['open', 'in_progress', 'integrated', 'fulfilled_prio']
     
     questions = [
         inquirer.Text('title', message="Request title"),
@@ -331,7 +347,7 @@ def add_request(config, filters):
                       choices=filters),
         inquirer.List('state', 
                       message="Initial state",
-                      choices=['open', 'in_progress', 'integrated']),
+                      choices=state_choices),
         inquirer.Text('created', 
                       message="Created date (YYYY-MM-DD)", 
                       default=datetime.now().strftime('%Y-%m-%d'),
@@ -413,7 +429,9 @@ def change_request_state(config, requests):
         return
         
     request_choices = [(f"{r['title']} ({r['project']} - {r['state']})", r) for r in requests]
-    state_choices = ['open', 'in_progress', 'integrated']
+    
+    # Add new state to choices
+    state_choices = ['open', 'in_progress', 'integrated', 'fulfilled_prio']
     
     questions = [
         inquirer.List('request', 
@@ -437,7 +455,16 @@ def change_request_state(config, requests):
                 break
         
         save_config(config)
-        console.print(f"[bold green]✓ State changed from {old_state} to {answers['state']}![/bold green]")
+        
+        # Display friendly state names
+        state_names = {
+            'fulfilled_prio': 'fulfilled (in prio version)',
+            'in_progress': 'in progress'
+        }
+        old_display = state_names.get(old_state, old_state)
+        new_display = state_names.get(answers['state'], answers['state'])
+        
+        console.print(f"[bold green]✓ State changed from {old_display} to {new_display}![/bold green]")
     else:
         console.print("[yellow]State change canceled[/yellow]")
 

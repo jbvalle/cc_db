@@ -22,7 +22,8 @@ projects:
   commonconfig: 'true'
 change_requests:
 - title: RQONE04617456
-  body: "[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal -\ [Test intergrated] SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0"
+  body: '[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal - [Test intergrated]
+    SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
@@ -41,14 +42,16 @@ change_requests:
   created: '2025-07-09'
 - title: RQONE04661229
   body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
-    Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
+    Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC
+    : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04630550
   body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC:
     EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs
-    / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES; 0'
+    / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES;
+    0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
@@ -76,24 +79,20 @@ change_requests:
   created: '2025-07-10'
 - title: RQONE04666209
   body: '[BCC : BswLib, Rte, EbOs] [Common Config 2.4.0] BCC  Analysis and Creation
-    :  BswLib, Rte, EbOs, [test integrated] CC : CONFIG / RQONE04666209_BSWLIB_RTE_EBOS; 0'
+    :  BswLib, Rte, EbOs, [test integrated] CC : CONFIG / RQONE04666209_BSWLIB_RTE_EBOS;
+    0'
   project: mHEV
   state: in_progress
   created: '2025-07-10'
+- title: RQONE_TEST1
+  body: ''
+  project: internal-request
+  state: fulfilled_prio
+  created: '2025-07-11'
 project_filters:
 - mHEV
 - pHEV
 - MQB27
 - HEV
 - internal-request
-background_text: "
-  ### Common Config Methodology – Faster, Smarter, Standardized<br>
-  Our Common Config Methodology streamlines BSW configuration across all VW projects by centralizing expertise and execution.
-
-  **Key Benefits:**<br>
-  ✔ Expert-Driven – Changes are assessed, integrated, and validated by our BSW Expert Cluster, ensuring high-quality configurations.<br>
-  ✔ Fast & Tracked – Workitems are reviewed, test-integrated, and documented within 3–4 days (or 1–2 days for high-priority requests).<br>
-  ✔ Consistent & Compliant – Standardized workflows prevent project-specific deviations, reducing errors and rework.<br>
-  ✔ Efficient Collaboration – Projects submit requests ( John Valle), while our team ensures rapid, well-documented delivery."
-
-
+background_text: "Our Common Config Methodology delivers faster, smarter BSW configuration across VW projects through centralized expertise. Key benefits include: expert-validated configurations in 3-4 days (1-2 for urgent requests), standardized workflows that eliminate errors, and seamless collaboration between project teams and our specialists. This approach ensures consistent, compliant results while dramatically reducing rework. It's your single source for rapid, reliable configuration management."
