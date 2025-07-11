@@ -86,5 +86,14 @@ project_filters:
 - MQB27
 - HEV
 - CC2.4.0
-background_text: CommonConfig delivers fast - high prio requests 1-2 days, standard
-  in 2-3 days. We'll even testintegrate it and support as well.
+background_text: |
+  ### Common Config Methodology – Faster, Smarter, Standardized
+  Our Common Config Methodology streamlines BSW configuration across all VW projects by centralizing expertise and execution.
+
+  **Key Benefits:**
+  ✔ Expert-Driven – Changes are assessed, integrated, and validated by our BSW Expert Cluster, ensuring high-quality configurations.
+  ✔ Fast & Tracked – Workitems are reviewed, test-integrated, and documented within 3–4 days (or 1–2 days for high-priority requests).
+  ✔ Consistent & Compliant – Standardized workflows prevent project-specific deviations, reducing errors and rework.
+  ✔ Efficient Collaboration – Projects submit requests ( John Valle), while our team ensures rapid, well-documented delivery.|
+
+
