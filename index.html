@@ -1079,7 +1079,7 @@
         }
 
         // Create HTML elements for Gantt chart
-        function createGanttChart(projects, sortBy = 'start_date') {
+        function createGanttChart(projects, sortBy = 'freeze_date') {
             if (!projects || projects.length === 0) {
                 return `
                 <div class="card">
