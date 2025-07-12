@@ -1182,14 +1182,14 @@
                             <i class="fas fa-sort"></i> ${sortLabels[sortBy]}
                         </button>
                         <div class="sort-options">
+                            <div class="sort-option ${sortBy === 'freeze_date' ? 'active' : ''}" data-sort="freeze_date">
+                                Freeze Date
+                            </div>
                             <div class="sort-option ${sortBy === 'start_date' ? 'active' : ''}" data-sort="start_date">
                                 Start Date
                             </div>
                             <div class="sort-option ${sortBy === 'end_date' ? 'active' : ''}" data-sort="end_date">
                                 End Date
-                            </div>
-                            <div class="sort-option ${sortBy === 'freeze_date' ? 'active' : ''}" data-sort="freeze_date">
-                                Freeze Date
                             </div>
                         </div>
                     </div>
