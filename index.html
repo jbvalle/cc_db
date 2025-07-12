@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Common Config Dashboard</title>
+    <title>Enhanced Common Config Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="favicon.png" type="image/png">
 
     <style>
         :root {
             --bg-dark: #0c0c14;
+            --bg-light: #f0f2f5;
             --bg-card: #1a1a2e;
+            --bg-card-light: #ffffff;
             --bg-card-hover: #25253d;
+            --bg-card-hover-light: #f5f7fa;
             --primary: #7e57c2;
             --primary-light: #9c7de8;
             --secondary: #29b6f6;
@@ -22,11 +27,21 @@
             --warning: #ffca28;
             --error: #ef5350;
             --text: #e0e0e0;
+            --text-light: #333333;
             --text-secondary: #a0a0c0;
+            --text-secondary-light: #666666;
             --border-radius: 16px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --common-config: #66bb6a; /* Green color for common config */
-            --current-week: #ff7043; /* Accent color for current week */
+            --common-config: #66bb6a;
+            --current-week: #ff7043;
+        }
+
+        /* Light theme variables */
+        body.light-theme {
+            --bg-card: var(--bg-card-light);
+            --text: var(--text-light);
+            --text-secondary: var(--text-secondary-light);
+            --bg-card-hover: var(--bg-card-hover-light);
         }
 
         * {
@@ -48,7 +63,18 @@
             overflow-x: hidden;
         }
 
+        body.light-theme {
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            animation: gradientBGLight 15s ease infinite;
+        }
+
         @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes gradientBGLight {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -154,6 +180,66 @@
             100% { transform: translateY(0); }
         }
         
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .theme-toggle span {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #29b6f6;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
         /* Progress Bar Styles */
         .progress-container {
             background: rgba(255, 255, 255, 0.05);
@@ -162,6 +248,11 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 30px;
+        }
+        
+        body.light-theme .progress-container {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .progress-label {
@@ -184,6 +275,10 @@
             overflow: hidden;
             position: relative;
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        body.light-theme .progress-bar {
+            background: rgba(0, 0, 0, 0.08);
         }
 
         .progress-fill {
@@ -256,6 +351,12 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+        
+        body.light-theme .card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
 
         .card::before {
             content: '';
@@ -275,6 +376,10 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
             border-color: rgba(126, 87, 194, 0.3);
         }
+        
+        body.light-theme .card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
 
         .card:hover::before {
             transform: scaleX(1);
@@ -287,6 +392,10 @@
             margin-bottom: 25px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body.light-theme .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .card-title {
@@ -329,6 +438,10 @@
             margin-bottom: 10px;
             padding: 10px 0;
         }
+        
+        body.light-theme .gantt-header {
+            background: rgba(0, 0, 0, 0.03);
+        }
 
         .gantt-header-project {
             min-width: 200px;
@@ -359,12 +472,20 @@
             width: 1px;
             background: rgba(255, 255, 255, 0.1);
         }
+        
+        body.light-theme .gantt-week::after {
+            background: rgba(0, 0, 0, 0.1);
+        }
 
         .gantt-row {
             display: flex;
             align-items: center;
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.light-theme .gantt-row {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .gantt-row-project {
@@ -379,6 +500,10 @@
             position: relative;
             background: rgba(255, 255, 255, 0.03);
             border-radius: 4px;
+        }
+        
+        body.light-theme .gantt-row-timeline {
+            background: rgba(0, 0, 0, 0.03);
         }
 
         .gantt-bar {
@@ -431,6 +556,10 @@
             z-index: 2;
             position: relative;
         }
+        
+        body.light-theme .gantt-week.current-week {
+            color: #333;
+        }
 
         .gantt-week.current-week::before {
             content: '';
@@ -462,6 +591,10 @@
             border-radius: 8px;
             border-left: 3px solid var(--current-week);
         }
+        
+        body.light-theme .current-week-indicator {
+            background: rgba(255, 112, 67, 0.05);
+        }
 
         .current-week-badge {
             background: linear-gradient(135deg, var(--current-week), #ff9a76);
@@ -477,6 +610,10 @@
             font-size: 14px;
             color: var(--text);
         }
+        
+        body.light-theme .current-week-text {
+            color: var(--text-light);
+        }
 
         /* CCR Filter Styles */
         .ccrs-filters {
@@ -489,6 +626,11 @@
             border-radius: var(--border-radius);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body.light-theme .ccrs-filters {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .filter-section {
@@ -517,6 +659,12 @@
             font-weight: 500;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        
+        body.light-theme .filter-btn {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary-light);
+        }
 
         .filter-btn:hover {
             transform: translateY(-3px);
@@ -542,9 +690,17 @@
             transition: var(--transition);
             margin-bottom: 15px;
         }
+        
+        body.light-theme .search-container {
+            background: rgba(0, 0, 0, 0.05);
+        }
 
         .search-container:hover {
             background: rgba(255, 255, 255, 0.12);
+        }
+        
+        body.light-theme .search-container:hover {
+            background: rgba(0, 0, 0, 0.08);
         }
 
         .search-container i {
@@ -559,9 +715,17 @@
             outline: none;
             width: 100%;
         }
+        
+        body.light-theme .search-container input {
+            color: var(--text-light);
+        }
 
         .search-container input::placeholder {
             color: var(--text-secondary);
+        }
+        
+        body.light-theme .search-container input::placeholder {
+            color: var(--text-secondary-light);
         }
 
         /* CCR List Styles */
@@ -585,10 +749,19 @@
             position: relative;
             height: 100%;
         }
+        
+        body.light-theme .ccr-item {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
 
         .ccr-item:hover {
             background: rgba(126, 87, 194, 0.15);
             transform: translateY(-5px);
+        }
+        
+        body.light-theme .ccr-item:hover {
+            background: rgba(126, 87, 194, 0.05);
         }
 
         @keyframes fadeInUp {
@@ -617,15 +790,27 @@
             background: rgba(255, 202, 40, 0.2);
             color: var(--warning);
         }
+        
+        body.light-theme .ccr-state-open {
+            background: rgba(255, 202, 40, 0.3);
+        }
 
         .ccr-state-in_progress {
             background: rgba(41, 182, 246, 0.2);
             color: var(--secondary);
         }
+        
+        body.light-theme .ccr-state-in_progress {
+            background: rgba(41, 182, 246, 0.3);
+        }
 
         .ccr-state-integrated {
             background: rgba(102, 187, 106, 0.2);
             color: var(--success);
+        }
+        
+        body.light-theme .ccr-state-integrated {
+            background: rgba(102, 187, 106, 0.3);
         }
 
         .ccr-header {
@@ -639,6 +824,10 @@
             font-size: 18px;
             font-weight: 600;
         }
+        
+        body.light-theme .ccr-title {
+            color: #333;
+        }
 
         .ccr-project {
             font-size: 14px;
@@ -648,6 +837,10 @@
             border-radius: 20px;
             white-space: nowrap;
         }
+        
+        body.light-theme .ccr-project {
+            background: rgba(41, 182, 246, 0.15);
+        }
 
         .ccr-body {
             color: var(--text-secondary);
@@ -655,12 +848,20 @@
             line-height: 1.6;
             flex-grow: 1;
         }
+        
+        body.light-theme .ccr-body {
+            color: var(--text-secondary-light);
+        }
 
         .ccr-footer {
             display: flex;
             justify-content: space-between;
             font-size: 14px;
             color: var(--text-secondary);
+        }
+        
+        body.light-theme .ccr-footer {
+            color: var(--text-secondary-light);
         }
 
         .no-ccrs-message {
@@ -674,6 +875,12 @@
             grid-column: 1 / -1;
             display: none;
         }
+        
+        body.light-theme .no-ccrs-message {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary-light);
+        }
 
         .card-content-box {
             background: rgba(255, 255, 255, 0.04);
@@ -682,11 +889,19 @@
             border-left: 4px solid var(--primary);
             position: relative;
         }
+        
+        body.light-theme .card-content-box {
+            background: rgba(0, 0, 0, 0.02);
+        }
 
         .markdown-content {
             line-height: 1.8;
             color: var(--text-secondary);
             font-size: 16px;
+        }
+        
+        body.light-theme .markdown-content {
+            color: var(--text-secondary-light);
         }
         
         .markdown-content h1,
@@ -719,6 +934,10 @@
             color: var(--accent);
         }
         
+        body.light-theme .markdown-content code {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
         .markdown-content pre {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -726,6 +945,11 @@
             padding: 15px;
             overflow-x: auto;
             margin: 1.5em 0;
+        }
+        
+        body.light-theme .markdown-content pre {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
         
         .markdown-content pre code {
@@ -754,6 +978,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        body.light-theme .footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary-light);
         }
 
         .data-source {
@@ -799,9 +1028,77 @@
             display: flex;
             gap: 10px;
         }
+        
+        body.light-theme .project-dates {
+            color: var(--text-secondary-light);
+        }
 
         .common-config-dates {
             color: var(--common-config);
+        }
+
+        /* New features styles */
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .dependency-graph {
+            height: 400px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        body.light-theme .dependency-graph {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .graph-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .graph-controls button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.light-theme .graph-controls button {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary-light);
+        }
+        
+        .graph-controls button:hover {
+            background: rgba(126, 87, 194, 0.15);
+        }
+        
+        .graph-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        body.light-theme .graph-info {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-secondary-light);
         }
 
         @media (max-width: 768px) {
@@ -868,11 +1165,24 @@
                 width: 100%;
                 margin-top: 15px;
             }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .dependency-graph {
+                height: 350px;
+            }
         }
+        
         /* Add new badge style for fulfilled_prio */
         .ccr-state-fulfilled_prio {
             background: rgba(147, 112, 219, 0.2); /* MediumPurple with opacity */
             color: #9370db; /* MediumPurple */
+        }
+        
+        body.light-theme .ccr-state-fulfilled_prio {
+            background: rgba(147, 112, 219, 0.3);
         }
 
     </style>
@@ -892,6 +1202,15 @@
             <div class="version-badge">
                 <i class="fas fa-code-branch"></i>
                 <span id="versionBadge">CommonConfig 2.4.0</span>
+            </div>
+            
+            <div class="theme-toggle">
+                <span><i class="fas fa-moon"></i></span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+                <span><i class="fas fa-sun"></i></span>
             </div>
         </header>
 
@@ -980,6 +1299,13 @@
             document.getElementById('openCount').textContent = openCCRs;
             document.getElementById('inProgressCount').textContent = inProgressCCRs;
             document.getElementById('integratedCount').textContent = integratedCCRs;
+            
+            return {
+                progressPercentage,
+                openCCRs,
+                inProgressCCRs,
+                integratedCCRs
+            };
         } 
 
         // Create HTML elements for Gantt chart
@@ -1083,7 +1409,291 @@
             `;
         }
         
-       // Update CCRs content to include the new state
+        // Create progress history chart
+        function createProgressHistoryCard(progressHistory) {
+            if (!progressHistory || progressHistory.length === 0) {
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-chart-line"></i> Progress History</h2>
+                    </div>
+                    <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        No progress history data available
+                    </p>
+                </div>
+                `;
+            }
+            
+            // Sort history by date
+            const sortedHistory = [...progressHistory].sort((a, b) => 
+                new Date(a.date) - new Date(b.date)
+            );
+            
+            const labels = sortedHistory.map(entry => {
+                const date = new Date(entry.date);
+                return `${date.getDate()}/${date.getMonth()+1}`;
+            });
+            
+            const percentages = sortedHistory.map(entry => {
+                return Math.round((entry.completed / entry.total) * 100);
+            });
+            
+            return `
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-chart-line"></i> Progress History</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const ctx = document.getElementById('progressChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ${JSON.stringify(labels)},
+                                datasets: [{
+                                    label: 'Completion %',
+                                    data: ${JSON.stringify(percentages)},
+                                    borderColor: '#66bb6a',
+                                    backgroundColor: 'rgba(102, 187, 106, 0.1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: '#66bb6a',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    tension: 0.3,
+                                    fill: true
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                const date = new Date('${sortedHistory[context.dataIndex].date}');
+                                                const formattedDate = date.toLocaleDateString();
+                                                return \`\${context.raw}% on \${formattedDate}\`;
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        ticks: {
+                                            color: 'var(--text-secondary)',
+                                            callback: function(value) {
+                                                return value + '%';
+                                            }
+                                        },
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.05)'
+                                        }
+                                    },
+                                    x: {
+                                        ticks: {
+                                            color: 'var(--text-secondary)'
+                                        },
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.05)'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            `;
+        }
+        
+        // Create dependency visualization
+        function createDependencyCard(dependencies, ccrs) {
+            if (!dependencies || dependencies.length === 0) {
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-project-diagram"></i> CCR Dependencies</h2>
+                    </div>
+                    <p style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        No dependency data available
+                    </p>
+                </div>
+                `;
+            }
+            
+            // Create a map of CCR titles to their data
+            const ccrMap = {};
+            ccrs.forEach(ccr => {
+                ccrMap[ccr.title] = ccr;
+            });
+            
+            return `
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-project-diagram"></i> CCR Dependencies</h2>
+                </div>
+                <div class="dependency-graph" id="dependencyGraph"></div>
+                <div class="graph-info">
+                    <i class="fas fa-info-circle"></i> This graph shows dependencies between Configuration Change Requests. 
+                    Arrows indicate that one CCR depends on another.
+                </div>
+                <div class="graph-controls">
+                    <button id="zoomIn"><i class="fas fa-search-plus"></i> Zoom In</button>
+                    <button id="zoomOut"><i class="fas fa-search-minus"></i> Zoom Out</button>
+                    <button id="resetView"><i class="fas fa-sync"></i> Reset View</button>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Create nodes and edges for the graph
+                        const nodes = [];
+                        const edges = [];
+                        const addedNodes = new Set();
+                        
+                        // Create nodes for each CCR
+                        ${JSON.stringify(ccrs)}.forEach(ccr => {
+                            if (!addedNodes.has(ccr.title)) {
+                                nodes.push({
+                                    id: ccr.title,
+                                    label: ccr.title,
+                                    title: ccr.body,
+                                    group: ccr.state
+                                });
+                                addedNodes.add(ccr.title);
+                            }
+                        });
+                        
+                        // Create edges for dependencies
+                        ${JSON.stringify(dependencies)}.forEach(dep => {
+                            if (addedNodes.has(dep.source) && addedNodes.has(dep.target)) {
+                                edges.push({
+                                    from: dep.source,
+                                    to: dep.target,
+                                    arrows: 'to'
+                                });
+                            }
+                        });
+                        
+                        // Create a network
+                        const container = document.getElementById('dependencyGraph');
+                        const data = {
+                            nodes: nodes,
+                            edges: edges
+                        };
+                        
+                        const options = {
+                            nodes: {
+                                shape: 'dot',
+                                size: 20,
+                                font: {
+                                    size: 12,
+                                    face: 'Segoe UI',
+                                    color: 'var(--text)'
+                                },
+                                borderWidth: 1,
+                                shadow: true
+                            },
+                            edges: {
+                                width: 2,
+                                color: { inherit: 'from' },
+                                smooth: {
+                                    type: 'cubicBezier',
+                                    forceDirection: 'horizontal'
+                                }
+                            },
+                            physics: {
+                                stabilization: true,
+                                barnesHut: {
+                                    gravitationalConstant: -3000,
+                                    springConstant: 0.04,
+                                    springLength: 200
+                                }
+                            },
+                            interaction: {
+                                tooltipDelay: 200,
+                                hover: true
+                            },
+                            groups: {
+                                open: {
+                                    color: {
+                                        background: 'rgba(255, 202, 40, 0.6)',
+                                        border: '#ffca28',
+                                        highlight: {
+                                            background: 'rgba(255, 202, 40, 0.8)',
+                                            border: '#ffca28'
+                                        }
+                                    }
+                                },
+                                in_progress: {
+                                    color: {
+                                        background: 'rgba(41, 182, 246, 0.6)',
+                                        border: '#29b6f6',
+                                        highlight: {
+                                            background: 'rgba(41, 182, 246, 0.8)',
+                                            border: '#29b6f6'
+                                        }
+                                    }
+                                },
+                                integrated: {
+                                    color: {
+                                        background: 'rgba(102, 187, 106, 0.6)',
+                                        border: '#66bb6a',
+                                        highlight: {
+                                            background: 'rgba(102, 187, 106, 0.8)',
+                                            border: '#66bb6a'
+                                        }
+                                    }
+                                },
+                                fulfilled_prio: {
+                                    color: {
+                                        background: 'rgba(147, 112, 219, 0.6)',
+                                        border: '#9370db',
+                                        highlight: {
+                                            background: 'rgba(147, 112, 219, 0.8)',
+                                            border: '#9370db'
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        
+                        const network = new vis.Network(container, data, options);
+                        
+                        // Add zoom controls
+                        document.getElementById('zoomIn').addEventListener('click', () => {
+                            network.moveTo({
+                                scale: network.getScale() * 1.2
+                            });
+                        });
+                        
+                        document.getElementById('zoomOut').addEventListener('click', () => {
+                            network.moveTo({
+                                scale: network.getScale() * 0.8
+                            });
+                        });
+                        
+                        document.getElementById('resetView').addEventListener('click', () => {
+                            network.fit({
+                                animation: {
+                                    duration: 1000,
+                                    easingFunction: 'easeInOutQuad'
+                                }
+                            });
+                        });
+                    });
+                </script>
+            </div>
+            `;
+        }
+        
+        // Update CCRs content to include the new state
         function createCCRsContent(ccrs, projectFilters) {
             if (!ccrs || ccrs.length === 0) {
                 return `...`;
@@ -1129,9 +1739,8 @@
                             In Progress (${inProgressCCRs})
                         </button>
                         <button class="filter-btn" data-filter="integrated" data-type="state">
-                            Integrated (${integratedCCRs})
+                            Fulfilled (${integratedCCRs})
                         </button>
-                        <!-- NEW FILTER BUTTON -->
                         <button class="filter-btn" data-filter="fulfilled_prio" data-type="state">
                             Fulfilled (Prio Version) (${fulfilledPrioCCRs})
                         </button>
@@ -1243,6 +1852,21 @@
         // Initialize the dashboard
         document.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Set up theme toggle
+                const themeToggle = document.getElementById('themeToggle');
+                themeToggle.addEventListener('change', function() {
+                    document.body.classList.toggle('light-theme', this.checked);
+                    // Save theme preference
+                    localStorage.setItem('theme', this.checked ? 'light' : 'dark');
+                });
+                
+                // Load saved theme preference
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light') {
+                    themeToggle.checked = true;
+                    document.body.classList.add('light-theme');
+                }
+                
                 // Load YAML configuration
                 const configResponse = await fetch(CONFIG_URL);
                 if (!configResponse.ok) throw new Error('Failed to load config.yaml');
@@ -1260,10 +1884,15 @@
                     console.warn('Error loading integration hints:', hintsError);
                 }
                 
+                // Update progress bar and get stats
+                const progressStats = updateProgressBar(config.change_requests);
+                
                 // Create dashboard content
                 const dashboardContent = `
                 <div class="dashboard-grid">
                     ${createGanttChart(config.projects)}
+                    ${createProgressHistoryCard(config.progress_history)}
+                    ${createDependencyCard(config.dependencies, config.change_requests)}
                     ${createCCRsContent(config.change_requests, config.project_filters)}
                     ${createIntegrationHintsContent(hintsContent)}
                     ${createBackgroundContent(config.background_text)}
@@ -1277,9 +1906,6 @@
                     document.getElementById('versionBadge').textContent = 
                         `CommonConfig ${config.common_config_version}`;
                 }
-                
-                // Update progress bar
-                updateProgressBar(config.change_requests);
                 
                 // Add event listeners for filters
                 document.querySelectorAll('.filter-btn').forEach(btn => {
