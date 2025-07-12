@@ -10,6 +10,81 @@
     <link rel="icon" href="favicon.png" type="image/png">
 
     <style>
+        /* Existing CSS remains unchanged */
+        /* Added navigation styles */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(126, 87, 194, 0.3);
+            color: var(--primary-light);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
+        }
+
+        .dashboard-section {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Adjusting for the new navigation bar */
+        body {
+            padding-top: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-bar {
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .dashboard-section {
+                scroll-margin-top: 120px;
+            }
+        }
+
+        /* Existing CSS remains unchanged */
         :root {
             --bg-dark: #0c0c14;
             --bg-card: #1a1a2e;
@@ -1017,6 +1092,25 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="scrollToSection('projects-timeline')">
+                <i class="fas fa-chart-bar"></i> Projects
+            </button>
+            <button class="nav-btn" onclick="scrollToSection('divergences')">
+                <i class="fas fa-code-branch"></i> Divergences
+            </button>
+            <button class="nav-btn" onclick="scrollToSection('ccrs')">
+                <i class="fas fa-tasks"></i> CCRs
+            </button>
+            <button class="nav-btn" onclick="scrollToSection('integration-hints')">
+                <i class="fas fa-lightbulb"></i> Integration Hints
+            </button>
+            <button class="nav-btn" onclick="scrollToSection('methodology')">
+                <i class="fas fa-scroll"></i> Methodology
+            </button>
+        </div>
 
         <div id="dashboardContent">
             <div class="loading">
@@ -1079,10 +1173,10 @@
         }
 
         // Create HTML elements for Gantt chart
-        function createGanttChart(projects, sortBy = 'freeze_date') {
+        function createGanttChart(projects, sortBy = 'start_date') {
             if (!projects || projects.length === 0) {
                 return `
-                <div class="card">
+                <div class="card dashboard-section" id="projects-timeline">
                     <div class="card-header">
                         <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
                     </div>
@@ -1174,7 +1268,7 @@
             };
             
             return `
-            <div class="card">
+            <div class="card dashboard-section" id="projects-timeline">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
                     <div class="sort-dropdown">
@@ -1182,14 +1276,14 @@
                             <i class="fas fa-sort"></i> ${sortLabels[sortBy]}
                         </button>
                         <div class="sort-options">
-                            <div class="sort-option ${sortBy === 'freeze_date' ? 'active' : ''}" data-sort="freeze_date">
-                                Freeze Date
-                            </div>
                             <div class="sort-option ${sortBy === 'start_date' ? 'active' : ''}" data-sort="start_date">
                                 Start Date
                             </div>
                             <div class="sort-option ${sortBy === 'end_date' ? 'active' : ''}" data-sort="end_date">
                                 End Date
+                            </div>
+                            <div class="sort-option ${sortBy === 'freeze_date' ? 'active' : ''}" data-sort="freeze_date">
+                                Freeze Date
                             </div>
                         </div>
                     </div>
@@ -1213,7 +1307,7 @@
         function createDivergenceContent(divergences) {
             if (!divergences || divergences.length === 0) {
                 return `
-                <div class="card">
+                <div class="card dashboard-section" id="divergences">
                     <div class="card-header">
                         <h2 class="card-title"><i class="fas fa-code-branch"></i> Divergences</h2>
                     </div>
@@ -1225,7 +1319,7 @@
             }
             
             return `
-            <div class="card">
+            <div class="card dashboard-section" id="divergences">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-code-branch"></i> Divergences</h2>
                 </div>
@@ -1257,7 +1351,7 @@
             const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
             
             return `
-            <div class="card">
+            <div class="card dashboard-section" id="ccrs">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-tasks"></i> Configuration Change Requests</h2>
                 </div>
@@ -1325,7 +1419,7 @@
         // Create HTML elements for background
         function createBackgroundContent(text) {
             return `
-            <div class="card">
+            <div class="card dashboard-section" id="methodology">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-scroll"></i> Common Config Methodology</h2>
                 </div>
@@ -1342,7 +1436,7 @@
         function createIntegrationHintsContent(markdownContent) {
             const htmlContent = marked.parse(markdownContent);
             return `
-            <div class="card">
+            <div class="card dashboard-section" id="integration-hints">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-lightbulb"></i> Integration Hints</h2>
                 </div>
@@ -1393,6 +1487,29 @@
                 } else {
                     noCCRsMessage.style.display = 'none';
                 }
+            }
+        }
+        
+        // Function to scroll to a section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                // Update active button
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Find the button for this section and activate it
+                const buttons = document.querySelectorAll('.nav-btn');
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].getAttribute('onclick').includes(sectionId)) {
+                        buttons[i].classList.add('active');
+                        break;
+                    }
+                }
+                
+                // Scroll to the element
+                element.scrollIntoView({ behavior: 'smooth' });
             }
         }
         
