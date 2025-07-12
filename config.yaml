@@ -22,36 +22,27 @@ projects:
   commonconfig: 'true'
 change_requests:
 - title: RQONE04617456
-  body: '[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal - [Test intergrated]
-    SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0'
+  body: '[BCC : IoSrv]  - MG1CS311 DMA load Calculation - Config Removal - [Test intergrated] SDOM: CC : CONFIG / RQONE04617456_IOSRV_MG1CS311_DMA; 0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04617836
-  body: "[BCC : IoExtDev]  - Konfig \xC4nderung zur Korrektur der DGDI-s Feedback-Signale\
-    \ (Busy-Signale der beiden DGDI-s) - Funktion Konfig \xC4nderung aus FCC-AR :\
-    \ rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01; 0  \xFCbernehmen"
+  body: "[BCC : IoExtDev]  - Konfig \xC4nderung zur Korrektur der DGDI-s Feedback-Signale\ (Busy-Signale der beiden DGDI-s) - Funktion Konfig \xC4nderung aus FCC-AR : rba_IoExtFscInjS / 1.31.0_CS311_COMMON_BSW2403_C01; 0  \xFCbernehmen"
   project: internal-request
   state: open
   created: '2025-07-09'
 - title: RQONE04617193
-  body: '[BCC : BswLib] - Enabling NoC Error Logger Register Access Without Debugger
-    Connection via HOST_DEBUG_EN Software Workaround'
+  body: '[BCC : BswLib] - Enabling NoC Error Logger Register Access Without Debugger Connection via HOST_DEBUG_EN Software Workaround'
   project: mHEV
   state: integrated
   created: '2025-07-09'
 - title: RQONE04661229
-  body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs.
-    Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC
-    : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
+  body: '[BCC : EbOS] - Correction of ISR Call for Shutdown Task Scheduling in EbOs. Take Over BCC : EbOs / 14.12.0_CS311_COMMON_3.2.1; 0 - Test intergrated in CC : CONFIG / RQONE04661229_EBOS_ISR_CORR; 0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
 - title: RQONE04630550
-  body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC:
-    EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs
-    / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES;
-    0'
+  body: '[BCC : ESM]  - [Common Config 2.4.0] BCC Analysis and Creation : ESM (SWSRC: EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 1). Take over from SWSRC : EcuM_Callout_Stubs / 4.16.0_P282.0.0_G00; 0 - Test integrated in CC : CONFIG / RQONE04630550_ESM_SIL_CHANGES; 0'
   project: internal-request
   state: in_progress
   created: '2025-07-09'
@@ -61,8 +52,7 @@ change_requests:
   state: open
   created: '2025-07-10'
 - title: RQONE04477120
-  body: '[BCC : IoExtDev ???] [IoExtFscDosVlv] and [IoExtFscHlfBr] Perl to java migration
-    to support BCT for AR4.5'
+  body: '[BCC : IoExtDev ???] [IoExtFscDosVlv] and [IoExtFscHlfBr] Perl to java migration to support BCT for AR4.5'
   project: internal-request
   state: open
   created: '2025-07-10'
@@ -72,15 +62,12 @@ change_requests:
   state: open
   created: '2025-07-10'
 - title: RQONE04667930
-  body: '[Common Config 2.4.0] BCC Analysis and Creation : PVER : DMG1311VH4C1996
-    / N26K10 - RQONE04253582'
+  body: '[Common Config 2.4.0] BCC Analysis and Creation : PVER : DMG1311VH4C1996 / N26K10 - RQONE04253582'
   project: HEV
   state: open
   created: '2025-07-10'
 - title: RQONE04666209
-  body: '[BCC : BswLib, Rte, EbOs] [Common Config 2.4.0] BCC  Analysis and Creation
-    :  BswLib, Rte, EbOs, [test integrated] CC : CONFIG / RQONE04666209_BSWLIB_RTE_EBOS;
-    0'
+  body: '[BCC : BswLib, Rte, EbOs] [Common Config 2.4.0] BCC  Analysis and Creation :  BswLib, Rte, EbOs, [test integrated] CC : CONFIG / RQONE04666209_BSWLIB_RTE_EBOS; 0'
   project: mHEV
   state: in_progress
   created: '2025-07-10'
@@ -90,9 +77,19 @@ project_filters:
 - MQB27
 - HEV
 - internal-request
-background_text: 'Our Common Config Methodology delivers faster, smarter BSW configuration
-  across VW projects through centralized expertise. Key benefits include: expert-validated
-  configurations in 3-4 days (1-2 for urgent requests), standardized workflows that
-  eliminate errors, and seamless collaboration between project teams and our specialists.
-  This approach ensures consistent, compliant results while dramatically reducing
-  rework. It''s your single source for rapid, reliable configuration management.'
+background_text: 'Our Common Config Methodology delivers faster, smarter BSW configuration across VW projects through centralized expertise. Key benefits include: expert-validated configurations in 3-4 days (1-2 for urgent requests), standardized workflows that eliminate errors, and seamless collaboration between project teams and our specialists. This approach ensures consistent, compliant results while dramatically reducing rework. It''s your single source for rapid, reliable configuration management.'
+
+# New divergences section
+divergences:
+  - project: mHEV
+    reason: "Implemented unreported change in IoSrv module on Jan 5, modified signal configuration without approval"
+    date: '2025-07-01'
+  - project: pHEV
+    reason: "Customized DMA configuration for specific hardware requirements, diverging from common config"
+    date: '2025-07-05'
+  - project: MQB27
+    reason: "Added project-specific diagnostic services that are not part of the common configuration"
+    date: '2025-06-28'
+  - project: HEV
+    reason: "Modified power management settings to meet unique thermal requirements"
+    date: '2025-07-03'

@@ -25,8 +25,8 @@
             --text-secondary: #a0a0c0;
             --border-radius: 16px;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --common-config: #66bb6a; /* Green color for common config */
-            --current-week: #ff7043; /* Accent color for current week */
+            --common-config: #66bb6a;
+            --current-week: #ff7043;
         }
 
         * {
@@ -154,7 +154,6 @@
             100% { transform: translateY(0); }
         }
         
-        /* Progress Bar Styles */
         .progress-container {
             background: rgba(255, 255, 255, 0.05);
             padding: 25px;
@@ -316,7 +315,6 @@
             border-radius: 4px;
         }
 
-        /* Gantt Chart Styles */
         .gantt-container {
             overflow-x: auto;
             padding: 15px 0;
@@ -424,7 +422,6 @@
             white-space: nowrap;
         }
 
-        /* Current Week Highlight */
         .gantt-week.current-week {
             color: white;
             font-weight: bold;
@@ -478,7 +475,6 @@
             color: var(--text);
         }
 
-        /* CCR Filter Styles */
         .ccrs-filters {
             display: flex;
             flex-wrap: wrap;
@@ -530,7 +526,6 @@
             box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
         }
 
-        /* Search Bar Styles */
         .search-container {
             position: relative;
             display: flex;
@@ -564,7 +559,6 @@
             color: var(--text-secondary);
         }
 
-        /* CCR List Styles */
         .ccrs-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -804,6 +798,117 @@
             color: var(--common-config);
         }
 
+        .divergence-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .divergence-item:hover {
+            background: rgba(255, 112, 67, 0.1);
+            transform: translateX(5px);
+        }
+
+        .divergence-project {
+            font-weight: 600;
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .divergence-reason {
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .divergence-date {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .divergence-project-badge {
+            background: rgba(126, 87, 194, 0.15);
+            color: var(--primary-light);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .no-divergences {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .sort-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .sort-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .sort-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sort-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 10px 0;
+            min-width: 180px;
+            z-index: 100;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sort-dropdown:hover .sort-options {
+            display: block;
+        }
+
+        .sort-option {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .sort-option:hover {
+            background: rgba(126, 87, 194, 0.2);
+            color: var(--primary-light);
+        }
+
+        .sort-option.active {
+            color: var(--primary-light);
+            background: rgba(126, 87, 194, 0.1);
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
                 gap: 20px;
@@ -869,12 +974,6 @@
                 margin-top: 15px;
             }
         }
-        /* Add new badge style for fulfilled_prio */
-        .ccr-state-fulfilled_prio {
-            background: rgba(147, 112, 219, 0.2); /* MediumPurple with opacity */
-            color: #9370db; /* MediumPurple */
-        }
-
     </style>
 </head>
 <body>
@@ -958,17 +1057,14 @@
             return Math.round((endDate - startDate) / (7 * 24 * 60 * 60 * 1000));
         }
         
-       // Update progress bar to exclude fulfilled_prio state
+        // Update progress bar
         function updateProgressBar(ccrs) {
             if (!ccrs || ccrs.length === 0) return;
             
-            // Filter out fulfilled_prio state
-            const relevantCCRs = ccrs.filter(c => c.state !== 'fulfilled_prio');
-            const totalCCRs = relevantCCRs.length;
-            
-            const openCCRs = relevantCCRs.filter(c => c.state === 'open').length;
-            const inProgressCCRs = relevantCCRs.filter(c => c.state === 'in_progress').length;
-            const integratedCCRs = relevantCCRs.filter(c => c.state === 'integrated').length;
+            const totalCCRs = ccrs.length;
+            const openCCRs = ccrs.filter(c => c.state === 'open').length;
+            const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
+            const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
             
             const progressPercentage = totalCCRs > 0 ? Math.round((integratedCCRs / totalCCRs) * 100) : 0;
             
@@ -980,10 +1076,10 @@
             document.getElementById('openCount').textContent = openCCRs;
             document.getElementById('inProgressCount').textContent = inProgressCCRs;
             document.getElementById('integratedCount').textContent = integratedCCRs;
-        } 
+        }
 
         // Create HTML elements for Gantt chart
-        function createGanttChart(projects) {
+        function createGanttChart(projects, sortBy = 'start_date') {
             if (!projects || projects.length === 0) {
                 return `
                 <div class="card">
@@ -997,8 +1093,15 @@
                 `;
             }
             
+            // Sort projects based on selected criteria
+            const sortedProjects = [...projects].sort((a, b) => {
+                const dateA = new Date(a[sortBy]);
+                const dateB = new Date(b[sortBy]);
+                return dateA - dateB;
+            });
+            
             // Calculate date range
-            const allDates = projects.flatMap(p => [
+            const allDates = sortedProjects.flatMap(p => [
                 new Date(p.start_date),
                 new Date(p.end_date),
                 ...(p.freeze_date ? [new Date(p.freeze_date)] : [])
@@ -1024,7 +1127,7 @@
             
             // Generate project rows
             let projectRows = '';
-            projects.forEach(project => {
+            sortedProjects.forEach(project => {
                 const startDate = new Date(project.start_date);
                 const endDate = new Date(project.end_date);
                 const freezeDate = project.freeze_date ? new Date(project.freeze_date) : null;
@@ -1063,10 +1166,33 @@
                 `;
             });
             
+            // Get human-readable sort label
+            const sortLabels = {
+                'start_date': 'Start Date',
+                'end_date': 'End Date',
+                'freeze_date': 'Freeze Date'
+            };
+            
             return `
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-chart-bar"></i> Projects Timeline</h2>
+                    <div class="sort-dropdown">
+                        <button class="sort-btn">
+                            <i class="fas fa-sort"></i> ${sortLabels[sortBy]}
+                        </button>
+                        <div class="sort-options">
+                            <div class="sort-option ${sortBy === 'start_date' ? 'active' : ''}" data-sort="start_date">
+                                Start Date
+                            </div>
+                            <div class="sort-option ${sortBy === 'end_date' ? 'active' : ''}" data-sort="end_date">
+                                End Date
+                            </div>
+                            <div class="sort-option ${sortBy === 'freeze_date' ? 'active' : ''}" data-sort="freeze_date">
+                                Freeze Date
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="gantt-container">
                     <div class="gantt-header">
@@ -1083,7 +1209,44 @@
             `;
         }
         
-       // Update CCRs content to include the new state
+        // Create HTML for divergence section
+        function createDivergenceContent(divergences) {
+            if (!divergences || divergences.length === 0) {
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fas fa-code-branch"></i> Divergences</h2>
+                    </div>
+                    <div class="no-divergences">
+                        <p>All projects are aligned with common configuration</p>
+                    </div>
+                </div>
+                `;
+            }
+            
+            return `
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-code-branch"></i> Divergences</h2>
+                </div>
+                <div class="divergences-list">
+                    ${divergences.map(divergence => `
+                    <div class="divergence-item">
+                        <div class="divergence-project">
+                            <span class="divergence-project-badge">${divergence.project}</span>
+                        </div>
+                        <div class="divergence-reason">${divergence.reason}</div>
+                        <div class="divergence-date">
+                            <i class="far fa-calendar"></i> ${divergence.date}
+                        </div>
+                    </div>
+                    `).join('')}
+                </div>
+            </div>
+            `;
+        }
+        
+        // Update CCRs content
         function createCCRsContent(ccrs, projectFilters) {
             if (!ccrs || ccrs.length === 0) {
                 return `...`;
@@ -1092,7 +1255,6 @@
             const openCCRs = ccrs.filter(c => c.state === 'open').length;
             const inProgressCCRs = ccrs.filter(c => c.state === 'in_progress').length;
             const integratedCCRs = ccrs.filter(c => c.state === 'integrated').length;
-            const fulfilledPrioCCRs = ccrs.filter(c => c.state === 'fulfilled_prio').length;
             
             return `
             <div class="card">
@@ -1131,10 +1293,6 @@
                         <button class="filter-btn" data-filter="integrated" data-type="state">
                             Integrated (${integratedCCRs})
                         </button>
-                        <!-- NEW FILTER BUTTON -->
-                        <button class="filter-btn" data-filter="fulfilled_prio" data-type="state">
-                            Fulfilled (Prio Version) (${fulfilledPrioCCRs})
-                        </button>
                     </div>
                 </div>
                 <div class="ccrs-list" id="ccrsContainer">
@@ -1142,9 +1300,7 @@
                     <div class="ccr-item" data-project="${ccr.project}" data-state="${ccr.state}" 
                          data-title="${ccr.title.toLowerCase()}" data-body="${ccr.body.toLowerCase()}">
                         <div class="ccr-state-badge ccr-state-${ccr.state}">
-                            ${ccr.state === 'fulfilled_prio' 
-                                ? 'FULFILLED (IN PRIO VERSION)' 
-                                : ccr.state.replace('_', ' ').toUpperCase()}
+                            ${ccr.state.replace('_', ' ').toUpperCase()}
                         </div>
                         <div class="ccr-header">
                             <div class="ccr-title">${ccr.title}</div>
@@ -1264,6 +1420,7 @@
                 const dashboardContent = `
                 <div class="dashboard-grid">
                     ${createGanttChart(config.projects)}
+                    ${createDivergenceContent(config.divergences)}
                     ${createCCRsContent(config.change_requests, config.project_filters)}
                     ${createIntegrationHintsContent(hintsContent)}
                     ${createBackgroundContent(config.background_text)}
@@ -1300,6 +1457,25 @@
                 if (searchInput) {
                     searchInput.addEventListener('input', filterCCRs);
                 }
+                
+                // Add event listeners for sort options
+                document.querySelectorAll('.sort-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const sortBy = this.dataset.sort;
+                        const ganttCard = this.closest('.card');
+                        const newGanttHTML = createGanttChart(config.projects, sortBy);
+                        ganttCard.outerHTML = newGanttHTML;
+                        
+                        // Re-attach event listeners to the new sort options
+                        document.querySelectorAll('.sort-option').forEach(newOption => {
+                            newOption.addEventListener('click', function() {
+                                const newSortBy = this.dataset.sort;
+                                const newGanttHTML = createGanttChart(config.projects, newSortBy);
+                                this.closest('.card').outerHTML = newGanttHTML;
+                            });
+                        });
+                    });
+                });
                 
             } catch (error) {
                 console.error('Error loading dashboard:', error);
