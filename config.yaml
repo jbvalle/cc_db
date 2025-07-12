@@ -98,5 +98,5 @@ background_text: 'Our Common Config Methodology delivers faster, smarter BSW con
   rework. It''s your single source for rapid, reliable configuration management.'
 divergences:
 - project: pHEV
-  reason: 'Adapted IoSrv Signal XYZ '
+  reason: 'Implemented unreported change in IoSrv Signal XYZ '
   date: '2025-07-12'

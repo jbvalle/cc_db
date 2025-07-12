@@ -10,81 +10,6 @@
     <link rel="icon" href="favicon.png" type="image/png">
 
     <style>
-        /* Existing CSS remains unchanged */
-        /* Added navigation styles */
-        .nav-bar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 15px 20px;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            margin-bottom: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: var(--text-secondary);
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .nav-btn:hover {
-            background: rgba(126, 87, 194, 0.3);
-            color: var(--primary-light);
-            transform: translateY(-3px);
-        }
-
-        .nav-btn:active {
-            transform: translateY(0);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
-        }
-
-        .dashboard-section {
-            scroll-margin-top: 100px;
-        }
-        
-        /* Adjusting for the new navigation bar */
-        body {
-            padding-top: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .nav-bar {
-                flex-wrap: wrap;
-                padding: 10px;
-            }
-            
-            .nav-btn {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            
-            .dashboard-section {
-                scroll-margin-top: 120px;
-            }
-        }
-
-        /* Existing CSS remains unchanged */
         :root {
             --bg-dark: #0c0c14;
             --bg-card: #1a1a2e;
@@ -847,6 +772,17 @@
             gap: 20px;
         }
 
+        .loading-methodology {
+            text-align: center;
+            padding: 30px;
+            font-size: 16px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
         .spinner {
             width: 50px;
             height: 50px;
@@ -984,6 +920,57 @@
             background: rgba(126, 87, 194, 0.1);
         }
 
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: rgba(126, 87, 194, 0.3);
+            color: var(--primary-light);
+            transform: translateY(-3px);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4);
+        }
+
+        .dashboard-section {
+            scroll-margin-top: 100px;
+        }
+        
         @media (max-width: 768px) {
             .dashboard-grid {
                 gap: 20px;
@@ -1047,6 +1034,20 @@
             .search-container {
                 width: 100%;
                 margin-top: 15px;
+            }
+
+            .nav-bar {
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .dashboard-section {
+                scroll-margin-top: 120px;
             }
         }
     </style>
@@ -1137,6 +1138,7 @@
         // Configuration YAML URL
         const CONFIG_URL = 'config.yaml';
         const HINTS_URL = 'integration_hints.md';
+        const METHODOLOGY_URL = 'common_config_methodology.md';
         
         // Function to calculate week numbers
         function getWeekNumber(date) {
@@ -1173,7 +1175,7 @@
         }
 
         // Create HTML elements for Gantt chart
-        function createGanttChart(projects, sortBy = 'start_date') {
+        function createGanttChart(projects, sortBy = 'freeze_date') {
             if (!projects || projects.length === 0) {
                 return `
                 <div class="card dashboard-section" id="projects-timeline">
@@ -1189,8 +1191,9 @@
             
             // Sort projects based on selected criteria
             const sortedProjects = [...projects].sort((a, b) => {
-                const dateA = new Date(a[sortBy]);
-                const dateB = new Date(b[sortBy]);
+                // Handle missing freeze dates by using end_date as fallback
+                const dateA = a[sortBy] ? new Date(a[sortBy]) : new Date(a.end_date);
+                const dateB = b[sortBy] ? new Date(b[sortBy]) : new Date(b.end_date);
                 return dateA - dateB;
             });
             
@@ -1415,17 +1418,18 @@
             </div>
             `;
         }
-         
-        // Create HTML elements for background
-        function createBackgroundContent(text) {
+        
+        // Create HTML elements for methodology section
+        function createMethodologyPlaceholder() {
             return `
             <div class="card dashboard-section" id="methodology">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-scroll"></i> Common Config Methodology</h2>
                 </div>
                 <div class="card-content-box">
-                    <div class="markdown-content">
-                        ${marked.parse(text)}
+                    <div class="loading-methodology">
+                        <div class="spinner"></div>
+                        <p>Loading methodology content...</p>
                     </div>
                 </div>
             </div>
@@ -1447,6 +1451,34 @@
                 </div>
             </div>
             `;
+        }
+        
+        // Load methodology content from markdown file
+        async function loadMethodologyContent() {
+            try {
+                const response = await fetch(METHODOLOGY_URL);
+                if (!response.ok) throw new Error('Failed to load methodology file');
+                const markdown = await response.text();
+                const htmlContent = marked.parse(markdown);
+                
+                const methodologySection = document.getElementById('methodology');
+                if (methodologySection) {
+                    methodologySection.querySelector('.card-content-box').innerHTML = `
+                        <div class="markdown-content">${htmlContent}</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading methodology:', error);
+                const methodologySection = document.getElementById('methodology');
+                if (methodologySection) {
+                    methodologySection.querySelector('.card-content-box').innerHTML = `
+                        <div class="error-content">
+                            <p>Error loading methodology: ${error.message}</p>
+                            <p>Please ensure common_config_methodology.md exists in the same directory</p>
+                        </div>
+                    `;
+                }
+            }
         }
         
         // Filter CCRs
@@ -1540,7 +1572,7 @@
                     ${createDivergenceContent(config.divergences)}
                     ${createCCRsContent(config.change_requests, config.project_filters)}
                     ${createIntegrationHintsContent(hintsContent)}
-                    ${createBackgroundContent(config.background_text)}
+                    ${createMethodologyPlaceholder()}
                 </div>
                 `;
                 
@@ -1593,6 +1625,9 @@
                         });
                     });
                 });
+                
+                // Load methodology content from markdown file
+                await loadMethodologyContent();
                 
             } catch (error) {
                 console.error('Error loading dashboard:', error);
