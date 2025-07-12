@@ -73,7 +73,7 @@ change_requests:
   created: '2025-07-10'
 - title: RQONE04667930
   body: '[Common Config 2.4.0] BCC Analysis and Creation : PVER : DMG1311VH4C1996
-    / N26K10 - RQONE04253582'
+    / N26K10 - RQONE04253582 *TEST*'
   project: HEV
   state: open
   created: '2025-07-10'
@@ -98,5 +98,5 @@ background_text: 'Our Common Config Methodology delivers faster, smarter BSW con
   rework. It''s your single source for rapid, reliable configuration management.'
 divergences:
 - project: pHEV
-  reason: 'Implemented unreported change in IoSrv Signal XYZ '
+  reason: 'Implemented unreported change in IoSrv Signal XYZ *test* '
   date: '2025-07-12'

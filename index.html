@@ -1332,7 +1332,8 @@
                         <div class="divergence-project">
                             <span class="divergence-project-badge">${divergence.project}</span>
                         </div>
-                        <div class="divergence-reason">${divergence.reason}</div>
+                        <div class="divergence-reason markdown-content">${marked.parse(divergence.reason)}</div>
+
                         <div class="divergence-date">
                             <i class="far fa-calendar"></i> ${divergence.date}
                         </div>
@@ -1403,7 +1404,8 @@
                             <div class="ccr-title">${ccr.title}</div>
                             <div class="ccr-project">${ccr.project}</div>
                         </div>
-                        <div class="ccr-body">${ccr.body}</div>
+                        <div class="ccr-body markdown-content">${marked.parse(ccr.body)}</div>
+
                         <div class="ccr-footer">
                             <div>Created: ${ccr.created || 'N/A'}</div>
                         </div>
