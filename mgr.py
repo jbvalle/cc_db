@@ -43,6 +43,187 @@ def validate_date(_, date):
     except ValueError:
         return "Invalid date format. Please use YYYY-MM-DD"
 
+# ------------------ DIVERGENCE MANAGEMENT ------------------
+
+def manage_divergences():
+    """Main menu for divergence management"""
+    while True:
+        config = load_config()
+        divergences = config.get('divergences', [])
+        projects = [p['name'] for p in config.get('projects', [])]
+        
+        display_header("DIVERGENCE MANAGEMENT")
+        
+        choices = [
+            ('List all divergences', 'list'),
+            ('Add new divergence', 'add'),
+            ('Edit existing divergence', 'edit'),
+            ('Remove divergence', 'remove'),
+            ('Return to main menu', 'back')
+        ]
+        
+        questions = [
+            inquirer.List('action',
+                          message="Select operation",
+                          choices=choices)
+        ]
+        action = inquirer.prompt(questions)['action']
+        
+        if action == 'back':
+            return
+        elif action == 'list':
+            list_divergences(divergences)
+        elif action == 'add':
+            add_divergence(config, projects)
+        elif action == 'edit':
+            edit_divergence(config, divergences, projects)
+        elif action == 'remove':
+            remove_divergence(config, divergences)
+
+def list_divergences(divergences):
+    """Display divergences in a formatted table"""
+    if not divergences:
+        console.print("[italic]No divergences found[/italic]")
+        return
+
+    table = Table(title="\nDIVERGENCES", box=box.ROUNDED, header_style="bold magenta")
+    table.add_column("Project", style="cyan", no_wrap=True)
+    table.add_column("Reason", style="green")
+    table.add_column("Date", style="yellow")
+
+    for div in divergences:
+        table.add_row(
+            div['project'],
+            div['reason'],
+            div.get('date', 'N/A')
+        )
+    
+    console.print(table)
+
+def add_divergence(config, projects):
+    """Add a new divergence"""
+    display_header("ADD NEW DIVERGENCE")
+    
+    if not projects:
+        console.print("[bold red]Error:[/bold red] No projects available. Please add projects first.")
+        return
+    
+    questions = [
+        inquirer.List('project', 
+                      message="Project",
+                      choices=projects),
+        inquirer.Text('reason', message="Reason for divergence"),
+        inquirer.Text('date', 
+                      message="Date (YYYY-MM-DD)", 
+                      default=datetime.now().strftime('%Y-%m-%d'),
+                      validate=validate_date),
+        inquirer.Confirm('confirm', message="Confirm creation?", default=True)
+    ]
+    
+    answers = inquirer.prompt(questions)
+    
+    if answers['confirm']:
+        new_divergence = {
+            'project': answers['project'],
+            'reason': answers['reason'],
+            'date': answers['date']
+        }
+        
+        if 'divergences' not in config:
+            config['divergences'] = []
+            
+        config['divergences'].append(new_divergence)
+        save_config(config)
+        console.print(f"[bold green]✓ Divergence for '{answers['project']}' added successfully![/bold green]")
+    else:
+        console.print("[yellow]Divergence creation canceled[/yellow]")
+
+def edit_divergence(config, divergences, projects):
+    """Edit an existing divergence"""
+    if not divergences:
+        console.print("[italic yellow]No divergences to edit[/italic yellow]")
+        return
+        
+    divergence_choices = [(f"{d['project']} - {d['reason'][:30]}...", d) for d in divergences]
+    
+    questions = [
+        inquirer.List('divergence', 
+                      message="Select divergence to edit",
+                      choices=divergence_choices)
+    ]
+    selected = inquirer.prompt(questions)['divergence']
+    
+    display_header(f"EDIT DIVERGENCE: {selected['project']}")
+    
+    questions = [
+        inquirer.List('project', 
+                      message="Project",
+                      choices=projects,
+                      default=selected['project']),
+        inquirer.Text('reason', 
+                      message="Reason", 
+                      default=selected['reason']),
+        inquirer.Text('date', 
+                      message="Date", 
+                      default=selected.get('date', ''),
+                      validate=validate_date),
+        inquirer.Confirm('confirm', message="Save changes?", default=True)
+    ]
+    
+    answers = inquirer.prompt(questions)
+    
+    if answers['confirm']:
+        # Update divergence in config
+        for div in config['divergences']:
+            if (div['project'] == selected['project'] and 
+                div['reason'] == selected['reason'] and
+                div.get('date') == selected.get('date')):
+                div.update({
+                    'project': answers['project'],
+                    'reason': answers['reason'],
+                    'date': answers['date']
+                })
+                break
+        
+        save_config(config)
+        console.print(f"[bold green]✓ Divergence updated![/bold green]")
+    else:
+        console.print("[yellow]Divergence update canceled[/yellow]")
+
+def remove_divergence(config, divergences):
+    """Remove a divergence"""
+    if not divergences:
+        console.print("[italic yellow]No divergences to remove[/italic yellow]")
+        return
+        
+    divergence_choices = [(f"{d['project']} - {d['reason'][:30]}...", d) for d in divergences]
+    
+    questions = [
+        inquirer.Checkbox('divergences', 
+                          message="Select divergences to remove",
+                          choices=divergence_choices),
+        inquirer.Confirm('confirm', message="Confirm deletion?", default=False)
+    ]
+    
+    answers = inquirer.prompt(questions)
+    
+    if answers['confirm'] and answers['divergences']:
+        # Create list of identifiers for removal
+        to_remove = []
+        for div in answers['divergences']:
+            to_remove.append((div['project'], div['reason'], div.get('date')))
+        
+        # Filter out removed divergences
+        config['divergences'] = [
+            d for d in config['divergences'] 
+            if (d['project'], d['reason'], d.get('date')) not in to_remove
+        ]
+        
+        save_config(config)
+        console.print(f"[bold green]✓ Removed {len(to_remove)} divergence(s)[/bold green]")
+    else:
+        console.print("[yellow]Divergence removal canceled[/yellow]")
+
 # ------------------ PROJECT MANAGEMENT ------------------
 
 def manage_projects():
@@ -523,6 +704,7 @@ def main():
         choices = [
             ('Manage Projects', 'projects'),
             ('Manage Change Requests', 'requests'),
+            ('Manage Divergences', 'divergences'),
             ('View Full Configuration', 'view'),
             ('Exit', 'exit')
         ]
@@ -541,6 +723,8 @@ def main():
             manage_projects()
         elif action == 'requests':
             manage_change_requests()
+        elif action == 'divergences':
+            manage_divergences()
         elif action == 'view':
             config = load_config()
             console.print(config)
